@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.PointPayMapper">
+
+	<resultMap id="membervomap" type="com.kosmo.vo.MemberVO">
+		<id property="mseq" column="mseq" />
+		<result property="mid" column="mid"/>
+		<result property="mpw" column="mpw"/>
+		<result property="mname" column="mname"/>
+		<result property="mbirth" column="mbirth"/>
+		<result property="mphone" column="mphone"/>
+		<result property="mmail" column="mmail"/>
+		<result property="mgender" column="mgender"/>
+		<result property="mregdate" column="mregdate"/>
+		<result property="mdel" column="mdel"/>
+		<collection property="pointvo" resultMap="pointvomap"/>
+		<collection property="payvo" resultMap="payvomap"/>
+		<collection property="ptypevo" resultMap="ptypevomap"/>
+		<collection property="usedpointvo" resultMap="usedpointvomap"/>
+		<collection property="plist" javaType="ArrayList" resultMap="pointvomap"/>
+	</resultMap>
+	
+	<resultMap id="pointvomap" type="com.kosmo.vo.PointVO">
+		<id property="poseq" column="poseq" />
+		<result property="mseq" column="mseq"/>
+		<result property="mid" column="mid"/>
+		<result property="upseq" column="upseq"/>
+		<result property="popoint" column="popoint"/>
+		<result property="poregdate" column="poregdate"/>
+	</resultMap>
+	
+	<resultMap id="payvomap" type="com.kosmo.vo.PayVO">
+		<id property="paseq" column="paseq" />
+		<result property="mseq" column="mseq"/>
+		<result property="mid" column="mid"/>
+		<result property="ptseq" column="ptseq"/>
+		<result property="pamoney" column="pamoney"/>
+		<result property="paregdate" column="paregdate"/>
+		<result property="ptname" column="ptname"/>
+		
+	</resultMap>
+	
+	<resultMap id="ptypevomap" type="com.kosmo.vo.PtypeVO">
+		<id property="ptseq" column="ptseq" />
+		<result property="ptname" column="ptname"/>
+	</resultMap>
+	
+	<resultMap id="usedpointvomap" type="com.kosmo.vo.UsedPointVO">
+		<id property="upseq" column="upseq" />
+		<result property="updetail" column="updetail"/>
+	</resultMap>
+	
+	<resultMap id="seekpointvomap" type="com.kosmo.vo.SeekPointVO">
+		<result property="poseq" column="poseq" />
+		<result property="mseq" column="mseq"/>
+		<result property="sseq" column="sseq"/>
+	</resultMap>
+	
+		
+	
+	
+	<!-- <select id="mList" resultMap="membervomap">
+	select mseq, mid, popoint, poregdate from gongmopointpay
+	</select> -->
+	
+	<select id="adminPointList" resultMap="pointvomap">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+		                select g.*
+		                from (
+		                    select mseq, mid, popoint, updetail ,to_char(poregdate, 'yyyy-mm-dd') poregdate
+		                    from gongmopointpay
+		                    order by poseq desc
+		                ) g
+		               
+		             ) t
+		     ) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="adminPayList" resultMap="payvomap">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+		                select g.*
+		                from (
+		                    select mseq, mid, pamoney, ptname ,to_char(paregdate, 'yyyy-mm-dd') paregdate 
+		                    from gongmopointpay where pamoney is not null
+		                    order by paseq desc
+		                ) g
+		                
+		             ) t
+		     ) pt
+		where rnum between #{sseq} and #{eseq}
+		
+	</select>
+	
+	<select id="adminPointsearchList11" resultMap="pointvomap">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+		                select g.*
+		                from (
+		                    select mseq, mid, popoint, updetail,to_char(poregdate, 'yyyy-mm-dd') poregdate
+							from gongmopointpay
+							where mid like '%'||#{mid}||'%'
+							order by poseq desc
+		                ) g
+		             ) t
+		     ) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="adminPointsearchList" resultMap="pointvomap">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+		                select g.*
+		                from (
+		                    select mseq, mid, popoint, to_char(poregdate, 'yyyy-mm-dd') poregdate
+							from gongmopointpay
+							where mid like '%'||#{mid}||'%'
+							and poregdate between #{sdate} and #{edate}
+							order by poseq desc
+		                ) g
+		                
+		             ) t
+		     ) pt
+		where rnum between #{sseq} and #{eseq}
+	
+		
+	</select>
+	
+	<select id="adminPayIdSearchList" resultMap="payvomap">
+		select pt.*
+			from (
+			        select rownum rnum, t.*
+			        from (
+			                select g.*
+			                from (
+			                    select mseq, mid, pamoney, ptname ,to_char(paregdate, 'yyyy-mm-dd') paregdate
+								from gongmopointpay
+								where mid like '%'||#{mid}||'%'
+								and pamoney is not null
+								order by paseq desc
+			                ) g
+			                
+			             ) t
+			     ) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="adminPaySearchList" resultMap="payvomap">
+		select pt.*
+			from (
+			        select rownum rnum, t.*
+			        from (
+			                select g.*
+			                from (
+			                    select mseq, mid, pamoney, to_char(paregdate, 'yyyy-mm-dd') paregdate
+								from gongmopointpay
+								where mid like '%'||#{mid}||'%'
+								and paregdate between #{sdate} and #{edate}
+								and pamoney is not null
+								order by paseq desc
+			                ) g
+			             ) t
+			     ) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+		
+	<select id="pointCount" resultType="int">
+		select count(*) cnt from point
+	</select>
+	
+	<select id="pointSearchCount" resultType="int">
+		select count(*) cnt from(
+		select mseq, mid, popoint, to_char(poregdate, 'yyyy-mm-dd') poregdate
+		from gongmopointpay
+		where mid like '%'||#{mid}||'%'
+		and poregdate between #{sdate} and #{edate})
+	</select>
+	
+	<select id="pointIdSearchCount" resultType="int">
+		select count(*) cnt from(
+		select mseq, mid, popoint, to_char(poregdate, 'yyyy-mm-dd') poregdate
+		from gongmopointpay
+		where mid like '%'||#{mid}||'%')
+	</select>
+	
+	<select id="payCount" resultType="int">
+		select count(*) cnt from pay
+	</select>
+	
+	<select id="paySearchCount" resultType="int">
+		select count(*) cnt from(
+		select mseq, mid, pamoney, to_char(paregdate, 'yyyy-mm-dd') paregdate
+		from gongmopointpay
+		where mid like '%'||#{mid}||'%'
+		and paregdate between #{sdate} and #{edate}
+		and pamoney is not null)
+	</select>
+	
+	<select id="paySerchIdCount" resultType="int">
+		select count(*) cnt from(
+		select mseq, mid, pamoney, to_char(paregdate, 'yyyy-mm-dd') paregdate
+		from gongmopointpay
+		where mid like '%'||#{mid}||'%'
+		and pamoney is not null)
+	</select>
+	
+	<select id="pointSum" resultType="int">
+		select nvl(sum(popoint), 0) point
+		from gongmopointpay
+		where mseq=#{mseq}
+	</select>
+	
+	<!-- <select id="payCom" resultType="com.kosmo.omo.PayVO">
+		select popoint, pamoney, ptname
+		from gongmopointpay
+		where paseq=#{paseq}
+	</select> -->
+	
+	<select id="payCom" resultType="com.kosmo.vo.PayVO">
+		select gp.popoint, gp.pamoney, gp.ptname
+		from gongmopointpay gp, (select mseq, paregdate from (select mseq, max(paregdate) paregdate from pay group by mseq)) p
+		where gp.paregdate= p.paregdate and p.mseq = #{mseq}
+	</select>
+	
+	<!-- select ptseq from pay where mseq = 1
+	and regdate >= (select max(regdate) from pay where mseq = 1); -->
+   
+   <select id="userPointList" resultMap="pointvomap">
+   		select pt.*
+			from (
+			        select rownum rnum, t.*
+			        from (
+			                select g.*
+			                from (
+			                    SELECT to_char(poregdate, 'yyyy-mm-dd') poregdate, updetail, popoint
+                                 , SUM(popoint) OVER(ORDER BY poseq) afterpoint
+                                    FROM gongmopointpay
+                                    where mseq=#{mseq}
+                                    order by poseq desc
+			                ) g
+			             ) t
+			     ) pt
+		where rnum between #{sseq} and #{eseq}
+   </select>
+   
+   <select id="userSearchPointList" resultMap="pointvomap">
+   	select pt.*
+			from (
+			        select rownum rnum, t.*
+			        from (
+			                select g.*
+			                from (
+			                    SELECT to_char(poregdate, 'yyyy-mm-dd') poregdate, updetail, popoint
+							     , SUM(popoint) OVER(ORDER BY poseq) afterpoint
+									FROM gongmopointpay
+									where mseq=#{mseq}
+								and poregdate between #{sdate} and #{edate}
+								order by poseq desc
+			                ) g
+			             ) t
+			     ) pt
+		where rnum between #{sseq} and #{eseq}
+   </select>
+   
+   <select id="userPointCount" resultType="int">
+   		select count(*) cnt from(
+   		select to_char(poregdate, 'yyyy-mm-dd') poregdate, updetail, popoint
+		from gongmopointpay
+		where mseq=#{mseq}
+		order by poseq desc)
+   </select>
+   
+   <select id="userSearhPointCount" resultType="int">
+   		select count(*) cnt from(
+   		select to_char(poregdate, 'yyyy-mm-dd') poregdate, updetail, popoint
+		from gongmopointpay
+		where mseq=#{mseq}
+		and poregdate between #{sdate} and #{edate}
+		order by poseq desc)
+   </select>
+   
+   <select id="userPayList" resultMap="payvomap">
+   		select pt.*
+			from (
+			        select rownum rnum, t.*
+			        from (
+			                select g.*
+			                from (
+			                    select to_char(paregdate, 'yyyy-mm-dd') paregdate, ptname, pamoney
+								from gongmopointpay
+								where mseq=#{mseq}
+								and pamoney is not null
+								order by paseq desc
+			                ) g
+			             ) t
+			     ) pt
+		where rnum between #{sseq} and #{eseq}
+   </select>
+   
+   <select id="userSearchPayList" resultMap="payvomap">
+   		select pt.*
+			from (
+			        select rownum rnum, t.*
+			        from (
+			                select g.*
+			                from (
+			                    select to_char(paregdate, 'yyyy-mm-dd') paregdate, ptname, pamoney
+								from gongmopointpay
+								where mseq=#{mseq}
+								and pamoney is not null
+								and paregdate between #{sdate} and #{edate}
+								order by paseq desc
+			                ) g
+			             ) t
+			     ) pt
+		where rnum between #{sseq} and #{eseq}
+   </select>
+   
+   <select id="userPayCount" resultType="int">
+  		select count(*) cnt from(
+		select to_char(paregdate, 'yyyy-mm-dd') paregdate, ptname, pamoney
+		from gongmopointpay
+		where mseq=#{mseq}
+		and pamoney is not null
+		order by paseq desc)
+   </select>
+   
+   <select id="userSearhPayCount" resultType="int">
+   		select count(*) cnt from(
+		select to_char(paregdate, 'yyyy-mm-dd') paregdate, ptname, pamoney
+		from gongmopointpay
+		where mseq=#{mseq}
+		and pamoney is not null
+		and paregdate between #{sdate} and #{edate}
+		order by paseq desc)
+   </select>
+   
+   <insert id="insertPay">
+   		insert into pay
+		values(pay_seq.nextval, #{mseq}, 1, #{pamoney}, sysdate)
+   </insert>
+   
+   <insert id="insertPayPoint" >
+   		insert into point
+		values(point_seq.nextval, #{mseq}, 3, #{pamoney}, sysdate)
+   </insert>
+   
+   <insert id="insertPointPayTable" >
+   		insert into pointpay
+		values(point_seq.currval, pay_seq.currval)
+   </insert>
+	
+   <insert id="insertJoinPoint" >
+   		insert into point
+		values(point_seq.nextval, member_seq.currval, 1, 500, sysdate)
+   </insert>
+   
+   <insert id="gDeletePoint" >
+   		insert into point
+		values(point_seq.nextval, #{mseq}, 5, -100, sysdate)
+   </insert>
+   
+   <insert id="poViewPoint" >
+   		insert into point
+		values(point_seq.nextval, #{mseq}, 2, -500, sysdate)
+   </insert>
+   
+   <insert id="insertSeekPoint" >
+   		insert into seekpoint
+		values(point_seq.currval, #{mseq}, #{sseq})
+   </insert>
+	
+	<insert id="gUploadPoint" >
+   		insert into point
+		values(point_seq.nextval, #{mseq}, 4, 100, sysdate)
+   </insert>
+   
+   <select id="indexPayList" resultMap="payvomap">
+   		select pt.*
+		    from (
+		            select rownum rnum, t.*
+		            from (
+		                    select g.*
+		                    from (
+		                        select mseq, mid, pamoney, to_char(paregdate, 'yyyy-mm-dd') paregdate
+		                        from gongmopointpay
+		                        where pamoney is not null
+		                        order by paseq desc
+		                    ) g
+		                 ) t
+		         ) pt
+		where rnum between 1 and 3
+   </select>
+   
+   <select id="payCnt" resultType="int">
+   		select count(paseq) todaypacnt 
+		from pay
+		where paregdate=sysdate
+   </select>
+   
+   <select id="searchSpoint" resultType="java.lang.Integer">
+   		select count(1) from seekpoint where mseq = #{mseq} and sseq= #{sseq}
+   </select>
+   
+   
+	<select id="payTodayCount" resultType="int">
+		select count(*) as pcnt
+		from pay
+		where (to_char(paregdate, 'yyyymmdd') - to_char(sysdate, 'yyyymmdd')) = 0
+	</select>
+	
+
+</mapper>

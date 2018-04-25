@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.MemberMapper">
+
+
+	<resultMap id="memberMap" type="com.kosmo.vo.MemberVO">
+		<result property="mseq" column="mseq" />
+		<result property="mid" column="mid" />
+		<result property="mpw" column="mpw" />
+		<result property="mname" column="mname" />
+		<result property="mbirth" column="mbirth" />
+		<result property="mphone" column="mphone" />
+		<result property="mmail" column="mmail" />
+		<result property="mgender" column="mgender" />
+		<result property="mregdate" column="mregdate" />
+		<result property="mdel" column="mdel" />
+	</resultMap>
+
+	<resultMap id="memberAddrMap" type="com.kosmo.vo.MemberAddrVO">
+		
+		<result property="msi1" column="msi1" />
+		<result property="msgg1" column="msgg1" />
+		<result property="memd1" column="memd1" />
+		<result property="mdetail1" column="mdetail1" />
+		
+		<result property="msi2" column="msi2" />
+		<result property="msgg2" column="msgg2" />
+		<result property="memd2" column="memd2" />
+		<result property="mdetail2" column="mdetail2" />
+	</resultMap>
+
+	<resultMap id="offerMap" type="com.kosmo.vo.OfferVO">
+		<result property="oseq" column="oseq" />
+		<result property="otitle" column="otitle" />
+		<result property="obody" column="obody" />
+		<result property="oregdate" column="oregdate" />
+		<result property="oview" column="oview" />
+		<result property="odel" column="odel" />
+	</resultMap>
+
+	<resultMap id="seekMap" type="com.kosmo.vo.SeekVO">
+		<result property="sseq" column="sseq" />
+		<result property="stitle" column="stitle" />
+		<result property="sbody" column="sbody" />
+		<result property="sregdate" column="sregdate" />
+		<result property="sview" column="sview" />
+		<result property="sdel" column="sdel" />
+	</resultMap>
+
+	<resultMap id="mvo" type="com.kosmo.vo.MemberVO">
+		<id property="mseq" column="mseq" />
+		<result property="mid" column="mid" />
+		<result property="mpw" column="mpw" />
+		<result property="mname" column="mname" />
+		<result property="mbirth" column="mbirth" />
+		<result property="mphone" column="mphone" />
+		<result property="mmail" column="mmail" />
+		<result property="mgender" column="mgender" />
+		<result property="mregdate" column="mregdate" />
+		<result property="mdel" column="mdel" />
+		<result property="mcnt" column="mcnt" />
+		<result property="msi1" column="msi1" />
+		<result property="msgg1" column="msgg1" />
+		<result property="memd1" column="memd1" />
+		<result property="mdetail1" column="mdetail1" />
+		<result property="msi2" column="msi2" />
+		<result property="msgg2" column="msgg2" />
+		<result property="memd2" column="memd2" />
+		<result property="mdetail2" column="mdetail2" />
+		<result property="startSeq" column="startSeq" />
+		<result property="endSeq" column="endSeq" />
+		<result property="searchStr" column="searchStr" />
+	</resultMap>
+
+	<resultMap id="gongmoMap" type="com.kosmo.vo.GongmoVO">
+      <id property="gseq" column="gseq" />
+      <result property="gtitle" column="gtitle" />
+      <result property="gspon" column="gspon" />
+      <result property="gsday" column="gsday" />
+      <result property="geday" column="geday" />
+      <result property="glink" column="glink" />
+      <result property="gbody" column="gbody" />
+      <result property="gposter" column="gposter" />
+      <result property="gregdate" column="gregdate" />
+      <result property="gview" column="gview" />
+      <result property="gdel" column="gdel" />
+      <result property="gsrday" column="gsrday" />
+      <result property="gerday" column="gerday" />
+      <result property="totalCount" column="totalCount" />
+      <result property="searchStr" column="searchStr" />
+      <result property="sseq" column="sseq" />
+      <result property="eseq" column="eseq" />
+      <collection property="mvo" resultMap="mvo" />
+   </resultMap>
+   
+   <resultMap id="seekdao" type="com.kosmo.vo.SeekVO">
+      <result property="sseq" column="sseq" />
+      <result property="stitle" column="stitle" />
+      <result property="sbody" column="sbody" />
+      <result property="sregdate" column="sregdate" />
+      <result property="sview" column="sview" />
+      <result property="sdel" column="sdel" />
+      <result property="lcnt" column="lcnt" />
+      <collection property="mvo" resultMap="mvo" />
+   </resultMap>
+   
+   <resultMap type="com.kosmo.vo.LikedVO" id="likedMap">
+		  <result property="lseq" column="lseq" />
+		  <result property="gseq" column="lcnt" />
+		  <result property="oseq" column="lseq" />
+		  <result property="sseq" column="lseq" />
+		  <result property="lcnt" column="lseq" />
+		  <result property="mseq" column="lseq" />
+		  <collection property="gvo" resultMap="gongmoMap"/>
+		  <collection property="ovo" resultMap="offerMap"/>
+		  <collection property="svo" resultMap="seekMap"/>
+	</resultMap>
+
+	<insert id="memberInsert" parameterType="com.kosmo.vo.MemberVO">
+		insert
+		into
+		member(mseq,mid,mpw,mname,mgubun,regdate)
+		values(member_seq.nextval ,
+		#{mid},#{mpw},#{mname},#{mgubun}, sysdate)
+	</insert>
+
+	<!-- <delete id="memberDelete" parameterType="com.kosmo.vo.MemberVO"> delete 
+		from member where mseq=#{mseq} </delete> -->
+
+
+
+
+	<!-- 사용유무(탈퇴) -->
+	<update id="memberLeave" parameterType="com.kosmo.vo.MemberVO">
+		update member set
+		mdel='y' where mseq=#{mseq}
+	</update>
+
+
+
+	<!--회원가입 controller,mapping에는 reg로 되어있음 -->
+	<insert id="memberReg" parameterType="com.kosmo.vo.MemberVO">
+		insert into member
+		values(
+		member_seq.nextval, #{mid}, 	#{mpw},	#{mname}, to_date(#{mbirth},'yyyy-mm-dd'),
+		#{mphone}, 	#{mmail}, 	#{mgender},	sysdate ,'n')
+
+	</insert>
+	
+	<!-- duty를 가져옵니다. 줄줄줄 -->
+	<select id="dutyList" resultType="com.kosmo.vo.DutyVO">
+		select dseq, dname
+		from duty
+		order by dseq
+	</select>
+	
+	
+	<insert id="memberDutyInsert" parameterType="int">
+		insert into memberduty
+		values(member_seq.currval, #{dseq})
+		
+	</insert>
+
+	<!-- 개인정보 보기 -->
+	<select id="memberInfo" resultType="com.kosmo.vo.MemberVO">
+		select
+		mseq,mid,mpw,mname,to_char(mbirth,'yyyy-MM-dd') as mbirth,mphone,mmail,mgender,mregdate,
+		msi1,msgg1,memd1,mdetail1,msi2,msgg2,memd2,mdetail2
+		from
+		address
+		where mseq=#{mseq} and mdel='n'
+	</select>
+	
+	<select id="dutyListCheck" resultType="com.kosmo.vo.MemberVO" parameterType="int">
+		select d.dseq, d.dname, nvl(s.mseq,0) as mseq 
+            from duty d left outer join 
+           ( select m.mseq, d.dseq, d.dname
+            from member m, duty d, memberduty md
+            where m.mseq = md.mseq and md.dseq = d.dseq and m.mseq = #{mseq})s
+            on d.dseq = s.dseq 
+            order by d.dseq
+	</select>
+
+
+	<!-- 개인정보 수정 -->
+	<delete id="memberDutyDel" parameterType="int">
+		delete memberduty
+		where mseq = #{mseq}
+			
+	</delete>
+	
+	<insert id="memberDutyUpdate">
+		insert into memberduty
+		values (#{mseq}, #{dseq})
+	</insert>
+	
+	
+	<update id="memberUpdate" parameterType="com.kosmo.vo.MemberVO">
+		update member set mpw=#{mpw}, mname=#{mname}, mmail=#{mmail}
+		where mseq=#{mseq}
+	</update>
+
+
+
+	<!-- 주소추가 -->
+	<insert id="memberAddrInsert" parameterType="com.kosmo.vo.MemberAddrVO">
+		insert into memberAddr(mseq, msi1, msgg1, memd1, mdetail1, msi2, msgg2, memd2, mdetail2)
+		values(member_seq.currval ,#{msi1}, #{msgg1}, #{memd1}, #{mdetail1}, #{msi2}, #{msgg2}, #{memd2}, #{mdetail2})
+	</insert>
+
+
+	<!-- 로그인 -->
+	<select id="memberSearchByID" parameterType="java.lang.String" resultType="com.kosmo.vo.MemberVO">
+		select mseq,mid,mpw,mname,mgubun,to_char(regdate,'yyyy-mm-dd HH24:MI:SS') regdate from member
+		where mid = #{mid}
+	</select>
+	
+	<select id="memberLogin" parameterType="java.lang.String" resultType="com.kosmo.vo.MemberVO">
+		select mseq, mid, mpw, mdel from member 
+		where mid=#{mid} and mpw=#{mpw}
+	</select>
+
+	<!--내가 쓴 공모전 -->
+	<select id="memberGongmoList" resultMap="com.kosmo.mapper.GongmoMapper.gongmoMap">
+		select mseq,gtitle, gspon, gregdate from gongmo
+		where mseq=#{mseq}
+	</select>
+
+	<!-- 내가 쓴 구인 -->
+	<select id="memberOfferList" resultMap="offerMap">
+		select mseq,otitle, oview, oregdate from offer
+		where mseq=#{mseq}
+	</select>
+
+
+
+
+	<!-- 내가 좋아요 한 구인 -->
+	<select id="memberOfferLike" resultMap="offerMap">
+		select mseq,otitle, oview, oregdate from liked
+		where mseq=#{mseq}
+	</select>
+
+
+	<!-- 내가 좋아요 한 구직 -->
+	<select id="memberSeekLike" resultMap="seekMap">
+		select mseq,stitle, sview, gregdate from liked
+		where mseq=#{mseq}
+	</select>
+
+
+	<select id="memberCount" resultType="int">
+		select count(mseq) as mcnt
+		from member
+		where mdel='n'
+	</select>
+
+	<select id="memberSearchCount" resultType="int">
+		select count(mseq) as
+		mcnt
+		from member
+		where mdel='n'
+		and mid like '%'|${searchStr}|'%' or mname like '%'|${searchStr}|'%' or
+		mphone like '%'|${searchStr}|'%'
+	</select>
+
+
+
+	<select id="memberList" resultMap="mvo" parameterType="com.kosmo.vo.MemberVO">
+		select
+		pt.*
+		from (
+		select rownum rnum, t.*
+		from (
+		select g.*
+		from (
+		select mseq, mid, mpw, mname, mbirth, mphone, mmail, mgender,
+		to_char(mregdate, 'yyyy-MM-dd HH24:MI:SS') as mregdate, mdel, 
+		msi1, msgg1, memd1, mdetail1,  msi2, msgg2, memd2, mdetail2
+		from address
+		where mdel = 'n'
+		and mseq = #{mseq}
+		) g
+		order by mseq desc
+		) t
+		) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	
+	<select id="memberListCount" resultType="Integer">
+		select
+            count(1)
+		from (
+            select rownum rnum, t.*
+            from (
+                select g.*
+                from (
+                    select mseq, mid, mpw, mname, mbirth, mphone, mmail, mgender,
+                    to_char(mregdate, 'yyyy-MM-dd HH24:MI:SS') as mregdate, mdel, 
+                    msi1, msgg1, memd1, mdetail1,  msi2, msgg2, memd2, mdetail2
+                    from address
+                    where mdel = 'n'
+                    and mseq = #{mseq}
+                ) g
+            order by mseq desc
+		) t)
+	</select>
+
+	<select id="memberSearchList" resultMap="mvo" parameterType="com.kosmo.vo.MemberVO">
+		select pt.*
+		from (
+		select rownum rnum, t.*
+		from (
+		select g.*
+		from (
+		select mseq, mid, mpw, mname, mbirth, mphone, mmail, mgender,
+		to_char(mregdate, 'yyyy-MM-dd HH24:MI:SS') as mregdate, mdel,
+		msi1, msgg1, memd1, mdetail1,  msi2, msgg2, memd2, mdetail2
+		from address
+		where mdel = 'n'
+		and mid like '%'|${searchStr}|'%' or mname like '%'|${searchStr}|'%' or
+		mphone like '%'|${searchStr}|'%'
+		) g
+		order by mseq desc
+		) t
+		) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	
+<!-- 개인 페이지 리스트 -->
+	<select id="memberGomoList" resultMap="gongmoMap">
+		select 
+			*
+        from
+	        (select 
+	        	rownum as rnum, g.*
+			from 
+				( select 
+					distinct gseq, gtitle, gspon, to_char(gregdate, 'yyyy-MM-dd') as gregdate 
+					from gongmoall 
+					where mseq=#{mseq} )g)
+        where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	
+
+	<select id="memberSeekList" resultMap="seekdao">
+		select * from (select rownum as rnum, s.*
+        from (select distinct sseq, stitle, to_char(sregdate, 'yyyy-MM-dd') as sregdate, nvl(lcnt,0) as lcnt  from seekAll where mseq=#{mseq})s)
+        where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	
+	<select id="memberGomoAllListCount" resultType="Integer">
+		 select 
+			count(1) as count
+        from
+	        (select 
+	        	rownum as rnum, g.*
+			from 
+				( select distinct gtitle, gspon, gregdate 
+					from gongmoall where mseq=#{mseq})g)
+	</select>
+
+
+	<select id="memberSeekAllListCount" resultType="Integer">
+		 select count(1)
+		 from (select rownum as rnum, s.* from 
+         (select distinct stitle, sregdate from seekAll where mseq=#{mseq})s)
+	</select>
+
+	<!-- offer부분 구현 필요 -->
+	  <!--   select distinct otitle, oregdate from duoffer where mseq=1; -->
+
+<!-- 유효성 검사 부분 -->
+ 	<select id="memberValidation" parameterType="String" resultType="Integer">
+ 		select count(1) as cnt from member where ${column} = #{value}
+ 	</select>
+
+<update id="memberAddrUpdate" parameterType="com.kosmo.vo.MemberAddrVO">
+	update memberaddr
+	set msi2=#{msi2}, msgg2=#{msgg2}, memd2 = #{memd2}, mdetail2=#{mdetail2}
+	where mseq=#{mseq}
+</update>
+
+	<!-- 내가 좋아요한 글 -->
+	<select id="myLikeList" resultMap="likedMap">
+	select
+        *
+    from
+        (select
+            rownum as rnum,
+            lgs.*,
+            o.otitle, to_char(o.oregdate, 'YYYY-MM-DD') as oregdate
+        from
+            (select 
+                lg.*,
+                s.stitle, to_char(s.sregdate, 'YYYY-MM-DD') as sregdate
+            from
+                (select 
+                    nvl(l.gseq, 0) as gseq, nvl(l.oseq,0) as oseq, nvl(l.sseq, 0) as sseq, l.lcnt, l.mseq,
+                    g.gtitle, to_char(g.gregdate, 'YYYY-MM-DD') as gregdate
+                from 
+                    (select 
+                        sum(lcnt) as lcnt, mseq, gseq, oseq, sseq 
+                    from 
+                        liked
+                    group by mseq, gseq, oseq, sseq)l
+                left join
+                    gongmo g
+                on l.gseq = g.gseq)lg
+            left join 
+                seek s
+            on lg.sseq = s.sseq)lgs
+        left join 
+            offer o
+        on lgs.oseq = o.oseq
+        where lgs.mseq = #{mseq})
+    where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	<select id="myLikeListCount" resultType="Integer">
+		select
+	        count(1) as cnt
+	    from
+	        (select
+	            rownum as rnum,
+	            lgs.*,
+	            o.otitle, to_char(o.oregdate, 'YYYY-MM-DD') as oregdate
+	        from
+	            (select 
+	                lg.*,
+	                s.stitle, to_char(s.sregdate, 'YYYY-MM-DD') as sregdate
+	            from
+	                (select 
+	                    nvl(l.gseq, 0) as gseq, nvl(l.oseq,0) as oseq, nvl(l.sseq, 0) as sseq, l.lcnt, l.mseq,
+	                    g.gtitle, to_char(g.gregdate, 'YYYY-MM-DD') as gregdate
+	                from 
+	                    (select 
+	                        sum(lcnt) as lcnt, mseq, gseq, oseq, sseq 
+	                    from 
+	                        liked
+	                    group by mseq, gseq, oseq, sseq)l
+	                left join
+	                    gongmo g
+	                on l.gseq = g.gseq)lg
+	            left join 
+	                seek s
+	            on lg.sseq = s.sseq)lgs
+	        left join 
+	            offer o
+	        on lgs.oseq = o.oseq
+	        where lgs.mseq = #{mseq})
+	</select>
+	
+
+</mapper>

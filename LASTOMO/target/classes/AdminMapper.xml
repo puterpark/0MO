@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.AdminMapper">
+
+	<resultMap id="adminMap" type="com.kosmo.vo.AdminVO">
+		<result property="aseq" column="aseq"/>
+		<result property="aid" column="aid"/>
+		<result property="apw" column="apw"/>
+		<result property="aname" column="aname"/>
+		<result property="agrade" column="agrade"/>
+		<result property="aack" column="aack"/>
+		<result property="aregdate" column="aregdate"/>
+	</resultMap>
+	
+	<!-- 회원가입 -->
+	<insert id="adminInsert" parameterType="com.kosmo.vo.AdminVO">
+	insert into admin
+	values(admin_seq.nextval,#{aid} ,#{apw} ,#{aname},#{agrade} ,#{aack} ,sysdate)
+	</insert>
+	
+
+	
+	
+	<!-- 개인정보 수정 -->
+	<update id="adminUpdate" parameterType="com.kosmo.vo.AdminVO">
+ 		update admin set apw=#{apw}, aname=#{aname} where aid=#{aid}
+ 	</update>
+	
+	
+	<!-- 회원 목록 보기 -->
+	<select id="adminMemberList" resultMap="adminMap">
+	select aseq, aid, aname, agrade, aack,aregdate from admin
+	where aseq=#{aseq}
+	</select>
+	
+	
+	<!-- 관리자 목록 보기(슈퍼전용) -->
+	<select id="adminList" resultMap="adminMap">
+		select
+		pt.*
+		from (
+		select rownum rnum, t.*
+		from (
+		select g.*
+		from (
+		select mseq, mid, mpw, mname, mbirth, mphone, mmail, mgender,
+		to_char(mregdate, 'yyyy-MM-dd HH24:MI:SS') as mregdate, mdel, 
+		msi1, msgg1, memd1, mdetail1, msi2, msgg2, memd2, mdetail2
+		from address
+		where mdel = 'n'
+		) g
+		order by mseq desc
+		) t
+		) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	
+	<select id ="adminValidation" resultType="Integer" parameterType="com.kosmo.vo.AdminVO">
+	select nvl(count(aid),0) as cnt
+		from admin where aid=#{aid}
+	</select>
+	
+</mapper>
+
+

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.DutyMapper">
+
+	<resultMap id="dutydao" type="com.kosmo.vo.DutyVO">
+		<id property="dseq" column="dseq" />
+		<result property="dname" column="dname" />
+	</resultMap>
+
+
+	<select id="DutyList" resultType="com.kosmo.vo.DutyVO">
+		select dseq, dname 
+		from duty
+		order by dseq
+	</select>
+	
+
+
+</mapper>

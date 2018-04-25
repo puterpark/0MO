@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.SeekAllMapper">
+
+	<resultMap id="seekdao" type="com.kosmo.vo.SeekAllVO">
+		<result property="sseq" column="sseq" />
+		<result property="mseq" column="mseq" />
+		<result property="stitle" column="stitle" />
+		<result property="sbody" column="sbody" />
+		<result property="sregdate" column="sregdate" />
+		<result property="sview" column="sview" />
+		<result property="lcnt" column="lcnt" />
+		<result property="dname" column="dname" />
+		<result property="dseq" column="dseq" />
+		<result property="sdel" column="sdel" />
+		<result property="mid" column="mid"/>
+		<result property="mpw" column="mpw"/>
+		<result property="mname" column="mname"/>
+		<result property="mbirth" column="mbirth"/>
+		<result property="mphone" column="mphone"/>
+		<result property="mmail" column="mmail"/>
+		<result property="mgender" column="mgender"/>
+		<result property="mregdate" column="mregdate"/>
+		<result property="mpost1" column="mpost1"/>
+		<result property="mst1" column="mst1"/>
+		<result property="msgg1" column="msgg1"/>
+		<result property="memd1" column="memd1"/>
+		<result property="mdetail1" column="mdetail1"/>
+		<result property="mpost2" column="mpost2"/>
+		<result property="mst2" column="mst2"/>
+		<result property="msgg2" column="msgg2"/>
+		<result property="memd2" column="memd2"/>
+		<result property="mdetail2" column="mdetail2"/>
+		<result property="rcnt" column="rcnt"/>
+		<result property="rmseq" column="rmseq"/>
+		<result property="rmname" column="rmname"/>
+		<result property="rbody" column="rbody"/>
+		<result property="rregdate" column="rregdate"/>
+		<result property="searchStr" column="searchStr" />
+		<result property="pffile" column="pffile"/>
+		<result property="pfseq" column="pfseq"/>
+	</resultMap>
+
+
+	<resultMap type="com.kosmo.vo.PofolVO" id="pofoldao">
+		<result property="pfseq" column="pfseq"/>
+		<result property="mseq" column="mseq"/>
+		<result property="pfregdate" column="pfregdate"/>
+		<result property="pftitle" column="pftitle"/>
+		<result property="pfdel" column="pfdel"/>
+		<result property="pffile" column="pffile"/>
+	</resultMap>
+
+	
+	<select id="seekIndexList" resultMap="seekdao" resultType="com.kosmo.vo.SeekAllVO">
+	                   
+	                   select distinct sseq, stitle, nvl(lcnt, 0) lcnt, mid, to_char(sregdate, 'yyyy-MM-dd') sregdate, sview
+		               from seekall
+		               where sdel = 'n'
+		               order by sseq desc
+	
+	</select>
+	
+	
+	<select id="seekAllList" resultMap="seekdao" resultType="com.kosmo.vo.SeekAllVO">
+	
+	select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select distinct sseq, stitle, nvl(lcnt, 0) lcnt, mid, to_char(sregdate, 'yyyy-MM-dd') sregdate, sview
+			                    from seekall
+			                    where sdel = 'n'
+                		) g
+                		order by g.sseq desc
+             	) t
+     	) pt
+		where rnum between #{startseq} and #{endseq}
+		
+	</select>
+	
+	<select id="seekAllListDuty" resultMap="seekdao" resultType="com.kosmo.vo.SeekAllVO">
+	
+		   		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select sseq, stitle, sbody, to_char(sregdate, 'yyyy-MM-dd') sregdate, sview, sdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from seekall
+			                    where sdel = 'n'
+			                    	and dseq=#{dseq}
+                		) g
+                		order by g.sseq desc
+             	) t
+     	) pt
+		where rnum between #{startseq} and #{endseq}
+	</select>
+	
+	<select id="seekDuty" resultType="com.kosmo.vo.DutyVO" parameterType="int">
+	   	select sseq, dseq, nvl(dname, '없음') dname
+		from seekall
+		where sseq=#{sseq}
+		and sdel='n'
+	</select>
+	
+	<select id="seekCount" resultType="int">
+	select count(*) cnt from seek where sdel='n'
+	</select>
+	
+	<select id="seekDutyCount" resultType="int">
+    select count(*) cnt from seekall where sdel='n' and dseq=#{dseq}
+	</select>
+	
+	
+	<select id="seekDetail" resultType="com.kosmo.vo.SeekAllVO">
+		select distinct sseq, sview, lcnt, mseq, mid, msi1, msgg1, memd1, mdetail1, mgender, stitle, sbody, pffile from seekall where sseq= #{sseq}
+	</select>
+	
+	<insert id="gujikInsert" >
+	insert into seek(sseq, mseq, stitle, sbody, sregdate, sdel, pfseq)
+	values(seek_seq.nextval, #{mseq}, #{stitle}, #{sbody}, to_char(sysdate, 'yyyymmdd'), 'n', #{pfseq})
+	</insert>
+	
+	<select id="seekDetailDuty" resultType="com.kosmo.vo.SeekAllVO">
+		select nvl(dname, '없음') dname from seekall where sseq=#{sseq} and sdel ='n'
+	</select>
+	
+	<select id="dutyList" resultType="com.kosmo.vo.DutyVO">
+		select dseq, dname from duty order by dseq
+	</select>
+	
+	<select id="seekRcnt" resultType="com.kosmo.vo.SeekAllVO">
+		select rcnt from seekrcnt where sseq=#{sseq}
+	</select>
+	
+	<select id="seekReply" resultType="com.kosmo.vo.SeekAllVO">
+		select rseq, rmseq, rbody, rregdate, rmid from seekreply where sseq=#{sseq} and rdel='n'
+	</select>
+	
+	<insert id="seekReplyinsert" parameterType="com.kosmo.vo.SeekAllVO">
+		insert into reply (rseq, sseq, mseq, rbody, rregdate, rdel) 
+		values (reply_seq.nextval, #{sseq}, #{rmseq}, #{rbody}, to_char(sysdate, 'yyyymmdd'), 'n')
+	</insert>
+	
+	<select id="mypofollist" resultType="com.kosmo.vo.PofolVO">
+	
+		select pfseq, mseq, pfregdate, pftitle, pfdel, pffile from pofol where mseq=#{mseq} and pfdel ='n' order by pfseq desc
+		
+	</select>
+	
+	<insert id="pofolInsert" parameterType="com.kosmo.vo.PofolVO">
+		insert into pofol (pfseq, mseq, pfregdate, pftitle, pfdel, pffile) 
+		values (pofol_seq.nextval, #{mseq}, to_char(sysdate, 'yyyymmdd'), #{pftitle}, 'n', #{pffile})
+	</insert>
+	
+	<update id="seekReplyupdate" parameterType="com.kosmo.vo.SeekAllVO">
+		update reply set rbody=#{rbody} where sseq=#{sseq} and mseq=#{rmseq}
+	</update>
+
+	<update id="seekReplydelete" parameterType="com.kosmo.vo.SeekAllVO">
+		update reply set rdel='y' where rseq=#{rseq}
+	</update>
+	
+	
+	<update id="seekDelete" parameterType="int">
+		update seek set sdel = 'y' where sseq = #{sseq}
+	</update>
+	
+	<update id="seekViewUp" parameterType="int">
+		update seek
+		set sview = sview+1
+		where sseq=#{sseq}
+	</update>
+	
+	
+	
+	<select id="seekSearchCount" resultType="int">  
+		select count(*)
+		from seekall
+		where stitle like '%'||#{searchStr}||'%' or mid like '%'||#{searchStr}||'%'
+	    	and sdel='n'
+	</select>
+  
+  
+  	<!-- 구직 페이지 검색(제목/작성자 통합검색) -->
+  	<select id="seekListSearch" resultMap="seekdao" parameterType="com.kosmo.vo.SeekAllVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select distinct sseq, stitle, nvl(lcnt, 0) lcnt, mid, to_char(sregdate, 'yyyy-MM-dd') sregdate, sview
+			                    from seekall
+			                    where sdel = 'n'
+			                    and stitle like '%'||#{searchStr}||'%' or mseq like '%'||#{searchStr}||'%'
+                		) g
+                		order by g.sseq desc
+             	) t
+     	) pt
+		where rnum between #{startseq} and #{endseq}
+	</select>
+
+
+	<select id="userSeekSearchCount" resultType="int">
+		select count(*)
+		from seekall
+		where (stitle like '%'||#{searchStr}||'%' or mseq like '%'||#{searchStr}||'%')
+	    	and sdel='n'
+	    	and mseq > 1
+	</select>
+  
+  
+  
+  	<select id="userSeekListSearch" resultMap="seekdao" parameterType="com.kosmo.vo.SeekAllVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select distinct sseq, stitle, nvl(lcnt, 0) lcnt, mid, to_char(sregdate, 'yyyy-MM-dd') sregdate, sview
+			                    from seekall
+			                    where sdel = 'n'
+                                and (stitle like '%'||#{searchStr}||'%' or mseq like '%'||#{searchStr}||'%')
+			                    and mseq > 1
+                		) g
+                		order by g.sseq desc
+             	) t
+     	) pt
+		where rnum between #{startseq} and #{endseq}
+	</select>
+	
+	
+	
+	
+
+
+
+</mapper>

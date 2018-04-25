@@ -1,0 +1,32 @@
+공백
+&nbsp;
+
+손가락 모양
+style="cursor:pointer"
+
+<img src="/alio/images/maple/nightlord.jpg">
+
+요소 안에 배경 설정
+background-image: url('/alio/images/gear_300.png');
+style="background-image: url('/alio/images/logo/alio_logo.png');"
+<img src="/alio/images/logo/alio_logo_s.png">
+<img src="/alio/images/logo/alio_logo_b.png">
+
+자바스크립트 뒤로가기
+<a href="javascript :history.back()">
+
+요소 가리기
+style="visibility: hidden;"
+
+
+안쪽 div 중앙 정렬
+style="display: inline-block; margin: 0 auto;"
+
+
+파일 업로드 양식
+<div class="form-group">
+                                                	<input type="file" class="custom-file-input" id="customFile">
+                                                	<label class="custom-file-label" for="customFile">Example file input</label>
+                                                </div>
+
+onclick="location.href='#'"

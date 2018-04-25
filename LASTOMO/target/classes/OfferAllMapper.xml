@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.OfferAllMapper">
+
+	<resultMap id="offerdao" type="com.kosmo.vo.OfferAllVO">
+		<result property="oseq" column="oseq" />
+		<result property="gseq" column="gseq" />
+		<result property="otitle" column="otitle" />
+		<result property="obody" column="obody" />
+		<result property="oregdate" column="oregdate" />
+		<result property="oview" column="oview" />
+		<result property="odel" column="odel" />
+		<result property="mseq" column="mseq" />
+		<result property="mid" column="mid" />
+		<result property="mname" column="mname" />
+		<result property="lcnt" column="lcnt" />
+		<result property="msi1" column="msi1" />
+		<result property="msgg1" column="msgg1" />
+		<result property="memd1" column="memd1" />
+		<result property="mdetail1" column="mdetail1" />
+		<result property="msi2" column="msi2" />
+		<result property="msgg2" column="msgg2" />
+		<result property="memd2" column="memd2" />
+		<result property="mdetail2" column="mdetail2" />
+		<result property="mgender" column="mgender" />
+		<result property="dseq" column="dseq" />
+		<result property="dname" column="dname" />
+		<result property="gtitle" column="gtitle" />
+		<result property="rnum" column="rnum" />
+		<result property="startseq" column="startseq" />
+		<result property="endseq" column="endseq" />
+		<result property="checkbox" column="checkbox" />
+		<result property="farr" column="farr" />
+	</resultMap>
+
+	<resultMap id="memberOfferMap" type="com.kosmo.vo.OfferAllVO">
+		<id property="oseq" column="oseq" />
+		<result property="gseq" column="gseq" />
+		<result property="otitle" column="otitle" />
+		<result property="gtitle" column="gtitle" />
+
+		<result property="mgender" column="mgender" />
+
+
+		<result property="obody" column="obody" />
+		<result property="oregdate" column="oregdate" />
+		<result property="oview" column="oview" />
+		<result property="odel" column="odel" />
+		<result property="mseq" column="mseq" />
+		<result property="mid" column="mid" />
+		<result property="lcnt" column="lcnt" />
+
+
+		<result property="msi1" column="msi1" />
+		<result property="msgg1" column="msgg1" />
+		<result property="memd1" column="memd1" />
+		<result property="mdetail1" column="mdetail1" />
+
+		<result property="msi2" column="msi2" />
+		<result property="msgg2" column="msgg2" />
+		<result property="memd2" column="memd2" />
+		<result property="mdetail2" column="mdetail2" />
+
+		<result property="mid" column="mid" />
+		<result property="mpw" column="mpw" />
+		
+		<result property="searchStr" column="searchStr" />
+		<result property="startseq" column="startseq" />
+		<result property="endseq" column="endseq" />
+		<result property="rnum" column="rnum" />
+		<result property="dseq" column="dseq" />
+		<result property="dname" column="dname" />
+
+		<collection property="dlist" javaType="ArrayList"
+			resultMap="dvoo" />
+		<collection property="glist" javaType="ArrayList"
+			resultMap="gvoo" />
+
+	</resultMap>
+
+
+	<resultMap id="dvoo" type="com.kosmo.vo.DutyVO">
+		<id property="dseq" column="dseq" />
+		<result property="dname" column="dname" />
+	</resultMap>
+
+	<resultMap id="gvoo" type="com.kosmo.vo.OfferAllVO">
+		<id property="gseq" column="gseq" />
+		<result property="gtitle" column="gtitle" />
+	</resultMap>
+
+
+
+	<select id="offerAllList" resultType="com.kosmo.vo.OfferAllVO">
+
+		select distinct oseq,
+		otitle, lcnt, mid, oregdate, oview, gtitle from
+		duoffer where odel ='n'
+		order by oseq desc
+
+	</select>
+
+	<select id="memberOfferLists" resultMap="memberOfferMap">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select d.oseq, d.gseq, d.otitle, d.obody, to_char(d.oregdate,'yyyy-MM-dd')as oregdate, d.oview, d.mseq, d.mname, d.dseq, nvl(d.dname,'없음') dname, d.lcnt, d.msi1, d.msgg1, d.msi2, d.msgg2, g.gtitle, m.mid
+                                from duoffer d, gongmo g, member m
+                                where d.gseq = g.gseq
+                                and m.mseq = d.mseq and odel = 'n'
+                		) g
+                		order by oseq desc
+             	) t
+     	) pt
+		where rnum between #{startseq} and #{endseq}
+	</select>
+
+
+	<select id="memberGongList" resultType="com.kosmo.vo.OfferAllVO">
+		select gtitle, gseq
+		from
+		gongmo
+	</select>
+
+	<select id="memberDutyList" resultType="com.kosmo.vo.OfferAllVO"
+		parameterType="int">
+		select d.dseq, nvl(d.dname, '없음') dname, nvl(do.oseq,0) oseq
+		from duty d
+		left outer join (select oseq, dseq, dname from duoffer where
+		oseq=#{oseq})do
+		on d.dseq=do.dseq
+		order by d.dseq
+	</select>
+
+
+	<select id="memberOfferDuty" parameterType="int" resultType="com.kosmo.vo.DutyVO">
+		select
+		o.oseq, d.dseq, nvl(d.dname, '없음') dname
+		from offer o, duty d, dutyoffer do
+		where
+		o.oseq
+		= do.oseq and do.dseq = d.dseq and o.odel='n' and o.oseq=#{oseq}
+		and
+		o.odel='n'
+	</select>
+
+
+
+	<select id="memberOfferDetail" resultMap="memberOfferMap"
+		parameterType="int">
+select o.mseq, o.mid, o.mname, o.oseq, o.gseq, o.otitle, o.obody, o.oregdate, o.oview, o.lcnt, m.mgender, g.gtitle,
+o.msi1, o.msgg1, o.memd1, o.msi2, o.msgg2, o.memd2, do.dseq, nvl(d.dname, '없음') dname
+from offerlcnt o, duty d, dutyoffer do, member m, gongmo g
+where o.oseq = do.oseq and d.dseq = do.dseq and m.mseq = o.mseq and o.gseq = g.gseq and o.oseq=#{oseq}
+order by oseq desc
+	</select>
+
+	<update id="memberOfferUpdate" parameterType="com.kosmo.vo.OfferAllVO">
+		update offer
+		set
+		otitle=#{otitle}, obody=#{obody}, gseq=#{gseq}
+		where oseq=#{oseq}
+	</update>
+
+	<update id="memberOfferDutyDelete" parameterType="int">
+		delete from
+		dutyoffer
+		where oseq=#{oseq}
+	</update>
+
+	<update id="memberOfferDutyUpdate" parameterType="int">
+		insert into
+		dutyoffer
+		values(#{dseq}, #{oseq})
+	</update>
+
+
+	<select id="memberOfferCount" resultType="int">
+		select count(*) cnt
+		from
+		offer
+		where odel='n'
+	</select>
+
+	<!-- 구인글쓰기 -->
+	<insert id="memberOfferInsert" parameterType="com.kosmo.vo.OfferAllVO">
+		insert into offer
+		values(OFFER_SEQ.NEXTVAL, #{mseq}, #{gseq}, #{otitle}, #{obody},
+		sysdate, 0, 'n')
+	</insert>
+
+	<insert id="memberDutyOfferInsert" parameterType="int">
+		insert into
+		dutyoffer
+		values(#{dseq}, offer_seq.currval)
+	</insert>
+
+	<update id="memberofferDelete" parameterType="int">
+		update offer
+		set
+		odel = 'y'
+		where oseq=#{oseq}
+	</update>
+
+	<!-- 최신글뽑기...뽑기..뽑기... -->
+	<select id="offerNewList" resultType="com.kosmo.vo.OfferAllVO">
+		select distinct oseq,
+		otitle, lcnt, mid, oregdate, oview from offerlcnt where odel='n' order
+		by oseq desc
+	</select>
+	
+	
+	
+	<select id="offerSearchCount" resultType="int">  
+		select count(*)
+		from duofferall
+		where otitle like '%'||#{searchStr}||'%' or mid like '%'||#{searchStr}||'%' or gtitle like '%'||#{searchStr}||'%'
+	    	and odel='n'
+	</select>
+	
+	<select id="offerListSearch" resultMap="memberOfferMap" parameterType="com.kosmo.vo.OfferAllVO">
+			select pt.*
+					from (
+			        		select rownum rnum, t.*
+			        		from (
+					                select g.*
+			                		from (
+			                                select oseq, gseq, otitle, obody, oregdate, oview, mseq, mid, dseq, nvl(dname,'없음') dname, lcnt, msi1, msgg1, msi2, msgg2, gtitle
+			                                from duofferall
+			                                where otitle like '%'||#{searchStr}||'%' or mid like '%'||#{searchStr}||'%' or gtitle like '%'||#{searchStr}||'%'
+			                		) g
+			                		order by g.oseq desc
+			             	) t
+			     	) pt
+			where pt.rnum between #{startseq} and #{endseq}
+	</select>
+	
+
+</mapper>

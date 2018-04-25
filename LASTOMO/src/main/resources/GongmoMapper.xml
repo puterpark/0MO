@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.GongmoMapper">
+
+	<resultMap id="gongmoMap" type="com.kosmo.vo.GongmoVO">
+		<id property="gseq" column="gseq" />
+		<result property="gtitle" column="gtitle" />
+		<result property="gspon" column="gspon" />
+		<result property="gsday" column="gsday" />
+		<result property="geday" column="geday" />
+		<result property="glink" column="glink" />
+		<result property="gbody" column="gbody" />
+		<result property="gposter" column="gposter" />
+		<result property="gregdate" column="gregdate" />
+		<result property="gview" column="gview" />
+		<result property="gdel" column="gdel" />
+		<result property="gsrday" column="gsrday" />
+		<result property="gerday" column="gerday" />
+		<result property="totalCount" column="totalCount" />
+		<result property="searchStr" column="searchStr" />
+		<result property="sseq" column="sseq" />
+		<result property="eseq" column="eseq" />
+		<result property="mseq" column="mseq" />
+		<collection property="mvo" resultMap="mvo" />
+		<collection property="fvo" resultMap="fvo" />
+		<collection property="lvo" resultMap="lvo" />
+		<collection property="flist" javaType="ArrayList" resultMap="fvo" />
+	</resultMap>
+	
+	<resultMap id="mvo" type="com.kosmo.vo.MemberVO">
+		<id property="mseq" column="mseq" />
+		<result property="mid" column="mid" />
+		<result property="mpw" column="mpw" />
+		<result property="mname" column="mname" />
+		<result property="mbirth" column="mbirth" />
+		<result property="mphone" column="mphone" />
+		<result property="mmail" column="mmail" />
+		<result property="mgender" column="mgender" />
+		<result property="mregdate" column="mregdate" />
+		<result property="mdel" column="mdel" />
+		<result property="mcnt" column="mcnt" />
+		<result property="msi1" column="msi1" />
+		<result property="msgg1" column="msgg1" />
+		<result property="memd1" column="memd1" />
+		<result property="mdetail1" column="mdetail1" />
+		<result property="msi2" column="msi2" />
+		<result property="msgg2" column="msgg2" />
+		<result property="memd2" column="memd2" />
+		<result property="mdetail2" column="mdetail2" />
+		<result property="startSeq" column="startSeq" />
+		<result property="endSeq" column="endSeq" />
+		<result property="searchStr" column="searchStr" />
+	</resultMap>
+	
+	<resultMap id="fvo" type="com.kosmo.vo.FieldVO">
+		<id property="fseq" column="fseq" />
+		<result property="gseq" column="gseq" />
+		<result property="fname" column="fname" />
+	</resultMap>
+	
+	<resultMap id="lvo" type="com.kosmo.vo.LikedVO">
+		<id property="lseq" column="lseq" />
+		<result property="lcnt" column="lcnt" />
+	</resultMap>
+	
+	<resultMap id="brvo" type="com.kosmo.vo.BreportVO">
+		<id property="brseq" column="brseq" />
+		<result property="gseq" column="gseq" />
+		<result property="oseq" column="oseq" />
+		<result property="sseq" column="sseq" />
+		<result property="gtitle" column="gtitle" />
+		<result property="otitle" column="otitle" />
+		<result property="stitle" column="stitle" />
+		<result property="brwhy" column="brwhy" />
+		<result property="brregdate" column="brregdate" />
+		<result property="brdel" column="brdel" />
+		<result property="startSeq" column="startSeq" />
+		<result property="endSeq" column="endSeq" />
+		<result property="searchStr" column="searchStr" />
+	</resultMap>
+	
+	<resultMap id="rrvo" type="com.kosmo.vo.RreportVO">
+		<id property="rrseq" column="rrseq" />
+		<result property="rseq" column="rseq" />
+		<result property="mseq" column="mseq" />
+		<result property="rrwhy" column="rrwhy" />
+		<result property="rrregdate" column="rrregdate" />
+		<result property="rrdel" column="rrdel" />
+		<result property="rbody" column="rbody" />
+		<result property="mid" column="mid" />
+		<result property="startSeq" column="startSeq" />
+		<result property="endSeq" column="endSeq" />
+		<result property="searchStr" column="searchStr" />
+	</resultMap>
+	
+	<!-- admin VO ResultMap -->
+	<resultMap id="avo" type="com.kosmo.vo.AdminVO">
+		<id property="aseq" column="aseq" />
+		<result property="aid" column="aid" />
+		<result property="apw" column="apw" />
+		<result property="aname" column="aname" />
+		<result property="agrade" column="agrade" />
+		<result property="aack" column="aack" />
+		<result property="aregdate" column="aregdate" />
+		<result property="startSeq" column="startSeq" />
+		<result property="endSeq" column="endSeq" />
+		<result property="searchStr" column="searchStr" />
+	</resultMap>
+
+	
+	
+	<!--//////////////////////////////////////////////////////////////////////////////////// -->
+	
+	
+	<!-- SQL -->
+	<select id="breportCount" resultType="int">
+		select nvl(sum(bcnt), 0)
+		from breportcnt
+		where (brregdate - to_char(sysdate, 'yyyymmdd')) = 0
+	</select>
+	
+	<select id="rreportCount" resultType="int">
+		select nvl(sum(rcnt), 0)
+		from rreportcnt
+		where (rregdate - to_char(sysdate, 'yyyymmdd')) = 0
+	</select>
+	
+	<select id="memberCount" resultType="int">
+		select count(mseq) as mcnt
+		from member
+		where mdel='n'
+	</select>
+	
+	<select id="gongmoCount" resultType="int">
+		select count(*) cnt
+		from gongmo
+		where gdel='n'
+	</select>
+	
+	<select id="gongmoFieldCount" resultType="int">
+		select count(*) cnt
+		from gongmoall
+		where gdel='n'
+			and fseq=#{fseq}
+	</select>
+	
+	<select id="gongmoSearchCount" resultType="int">
+		select count(*)
+		from gongmolcnt
+		where (gtitle like '%'||#{searchStr}||'%' or gspon like '%'||#{searchStr}||'%')
+	    	and gdel='n'
+	</select>
+	
+	<!-- index에 공모전 5개 출력 -->
+	<select id="gongmoListFive" resultMap="gongmoMap">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+                		select g.*
+                		from (
+                    		select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+                    		from gongmolcnt
+                    		where gdel = 'n'
+                		) g
+                		order by g.gseq desc
+             	) t
+     		) pt
+		where rnum between 1 and 5
+	</select> 
+	
+	<!-- 공모전 최근 순으로 출력 -->
+	<select id="gongmoList" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from gongmolcnt
+			                    where gdel = 'n'
+                		) g
+                		order by g.gseq desc
+             	) t
+     	) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="gongmoListField" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from gongmoall
+			                    where gdel = 'n'
+			                    	and fseq=#{fseq}
+                		) g
+                		order by g.gseq desc
+             	) t
+     	) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="gongmoField" resultType="com.kosmo.vo.FieldVO" parameterType="int">
+		select gseq, fseq, nvl(fname, '없음') fname
+		from gongmoall
+		where gseq=#{gseq}
+		and gdel='n'
+	</select>
+	
+	<!-- 공모전 페이지 검색(제목/주최 통합검색) -->
+	<select id="gongmoListSearch" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from gongmolcnt
+			                    where gdel = 'n'
+			                    and (gtitle like '%'||#{searchStr}||'%' or gspon like '%'||#{searchStr}||'%')
+                		) g
+                		order by g.gseq desc
+             	) t
+     	) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	
+	
+	<select id="gongmoCal" resultMap="gongmoMap">
+		select gseq, gtitle, to_char(gsday, 'yyyy-mm-dd') as gsday, to_char(geday,'yyyy-mm-dd') as geday 
+		from gongmo
+		where gdel='n'
+	</select>
+	
+	<!-- 공모전 상세 페이지 -->
+	<select id="gongmoDetail" resultMap="gongmoMap" parameterType="int">
+		select gseq, gposter, gtitle, gspon, fseq, nvl(fname, '없음') fname, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, nvl(lcnt, 0) lcnt, gview, gbody, mseq
+		from gongmoall
+		where gdel='n'
+			and gseq=#{gseq}
+	</select>
+	
+	<!-- 공모전 추가 -->
+	<insert id="gongmoInsert" parameterType="com.kosmo.vo.GongmoVO">
+		insert into gongmo
+		values (gongmo_seq.nextval, #{mseq}, #{gtitle}, #{gspon}, to_date(#{gsday}, 'yyyy-MM-dd'), to_date(#{geday}, 'yyyy-MM-dd'), #{glink}, #{gbody}, #{gposter}, sysdate, 0, 'n')
+	</insert>
+	
+	<insert id="adminGongmoInsert" parameterType="com.kosmo.vo.GongmoVO">
+		insert into gongmo
+		values (gongmo_seq.nextval, 1, #{gtitle}, #{gspon}, to_date(#{gsday}, 'yyyy-MM-dd'), to_date(#{geday}, 'yyyy-MM-dd'), #{glink}, #{gbody}, #{gposter}, sysdate, 0, 'n')
+	</insert>
+	
+	<insert id="gongmoFieldInsert" parameterType="int">
+		insert into gongmofield
+		values (gongmo_seq.currval, #{fseq})
+	</insert>
+	
+	<insert id="gongmoFieldUpdate">
+		insert into gongmofield
+		values (#{gseq}, #{fseq})
+	</insert>
+	
+	<update id="gongmoUpdate" parameterType="com.kosmo.vo.GongmoVO">
+		update gongmo
+		set gtitle=#{gtitle}, gspon=#{gspon}, gsday=to_date(#{gsday}, 'yyyy-MM-dd'), geday=to_date(#{geday}, 'yyyy-MM-dd'), glink=#{glink}, gbody=#{gbody}
+		where gseq=#{gseq}
+	</update>
+	
+	<update id="gongmoUpdateForPoster" parameterType="com.kosmo.vo.GongmoVO">
+		update gongmo
+		set gtitle=#{gtitle}, gspon=#{gspon}, gsday=to_date(#{gsday}, 'yyyy-MM-dd'), geday=to_date(#{geday}, 'yyyy-MM-dd'), glink=#{glink}, gposter=#{gposter}, gbody=#{gbody}
+		where gseq=#{gseq}
+	</update>
+	
+	<update id="gongmoFieldDelete" parameterType="int">
+		delete from gongmofield
+		where gseq=#{gseq}
+	</update>
+	
+	<update id="gongmoDelete" parameterType="int">
+		update gongmo
+		set gdel='y'
+		where gseq=#{gseq}
+	</update>
+	
+	<update id="gongmoViewUp" parameterType="int">
+		update gongmo
+		set gview = gview+1
+		where gseq=#{gseq}
+	</update>
+	
+	<insert id="gongmoLike">
+		insert into liked (lseq, gseq, lcnt, mseq)
+		values (liked_seq.nextval, #{gseq}, #{lcnt}, #{mseq})
+	</insert>
+	
+	<select id="adminGongmoListFive" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+                		select g.*
+                		from (
+                    		select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, to_char(gregdate, 'yyyy-MM-dd HH24:MI:SS') as gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+                    		from gongmolcnt
+                    		where gdel = 'n'
+                            and mseq = 1
+                		) g
+                		order by g.gseq desc
+             	) t
+     		) pt
+		where rnum between 1 and 5
+	</select>
+	
+	<select id="userGongmoListFive" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+                		select g.*
+                		from (
+                    		select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, to_char(gregdate, 'yyyy-MM-dd HH24:MI:SS') as gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+                    		from gongmolcnt
+                    		where gdel = 'n'
+                            and mseq > 1
+                		) g
+                		order by g.gseq desc
+             	) t
+     		) pt
+		where rnum between 1 and 5
+	</select>
+	
+	<select id="adminGongmoCount" resultType="int">
+		select count(*) cnt
+		from gongmo
+		where gdel='n'
+			and mseq = 1
+	</select>
+	
+	<select id="userGongmoCount" resultType="int">
+		select count(*) cnt
+		from gongmo
+		where gdel='n'
+			and mseq > 1
+	</select>
+	
+	<select id="adminGongmoSearchCount" resultType="int">
+		select count(*)
+		from gongmolcnt
+		where (gtitle like '%'||#{searchStr}||'%' or gspon like '%'||#{searchStr}||'%')
+	    	and gdel='n'
+	    	and mseq = 1
+	</select>
+	
+	<select id="userGongmoSearchCount" resultType="int">
+		select count(*)
+		from gongmolcnt
+		where (gtitle like '%'||#{searchStr}||'%' or gspon like '%'||#{searchStr}||'%')
+	    	and gdel='n'
+	    	and mseq > 1
+	</select>
+	
+	<select id="adminGongmoList" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, to_char(gregdate, 'yyyy-MM-dd HH24:MI:SS') as gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from gongmolcnt
+			                    where gdel = 'n'
+			                    and mseq = 1
+                		) g
+                		order by g.gseq desc
+             	) t
+     	) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="userGongmoList" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, to_char(gregdate, 'yyyy-MM-dd HH24:MI:SS') as gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from gongmolcnt
+			                    where gdel = 'n'
+			                    and mseq > 1
+                		) g
+                		order by g.gseq desc
+             	) t
+     	) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="adminGongmoListSearch" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, to_char(gregdate, 'yyyy-MM-dd HH24:MI:SS') as gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from gongmolcnt
+			                    where gdel = 'n'
+                                and (gtitle like '%'||#{searchStr}||'%' or gspon like '%'||#{searchStr}||'%')
+			                    and mseq = 1
+                		) g
+                		order by g.gseq desc
+             	) t
+     	) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="userGongmoListSearch" resultMap="gongmoMap" parameterType="com.kosmo.vo.GongmoVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select gseq, gtitle, gspon, to_char(gsday, 'yyyy-MM-dd') gsday, to_char(geday, 'yyyy-MM-dd') geday, (to_char(gsday, 'yyyymmddd')-to_char(sysdate, 'yyyymmddd')) as gsrday, ceil(geday-sysdate) as gerday, glink, gbody, gposter, to_char(gregdate, 'yyyy-MM-dd HH24:MI:SS') as gregdate, gview, gdel, mseq, mid, nvl(lcnt, 0) lcnt
+			                    from gongmolcnt
+			                    where gdel = 'n'
+                                and (gtitle like '%'||#{searchStr}||'%' or gspon like '%'||#{searchStr}||'%')
+			                    and mseq > 1
+                		) g
+                		order by g.gseq desc
+             	) t
+     	) pt
+		where rnum between #{sseq} and #{eseq}
+	</select>
+	
+	<select id="fieldList" resultMap="fvo">
+		select fseq, fname
+		from field
+		order by fseq
+	</select>
+	
+	<select id="fieldListCheck" resultType="com.kosmo.vo.GongmoVO" parameterType="int">
+		select f.fseq, f.fname, nvl(go.gseq, 0) as gseq
+        from field f left outer join (
+            select gseq, fseq, fname
+            from gongmoall
+            where gseq = #{gseq}) go
+            on f.fseq = go.fseq
+        order by f.fseq
+	</select>
+	
+	<insert id="fieldInsert" parameterType="com.kosmo.vo.FieldVO">
+		insert into field
+		values (field_seq.nextval, #{fname})
+	</insert>
+	
+	<update id="fieldUpdate" parameterType="com.kosmo.vo.FieldVO">
+		update field 
+		set fname=#{fname}
+		where fseq=#{fseq}
+	</update>
+	
+	<insert id="gongmoReport" parameterType="com.kosmo.vo.BreportVO">
+		insert into breport(brseq, gseq, brwhy, brregdate, brdel)
+		values (breport_seq.nextval, #{gseq}, #{brwhy}, sysdate, 'n')
+	</insert>
+	
+	<select id="breportListCount" resultType="int">
+		select count(brseq) as brcnt
+		from breport
+		where brdel='n'
+	</select>
+	
+	<!-- 어드민 신고에 신고(게시글) 출력 -->
+	<select id="breportList" resultMap="brvo">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select brseq, nvl(gseq, 0) gseq, gtitle, nvl(oseq, 0) oseq, otitle, nvl(sseq, 0) sseq, stitle, brwhy, to_char(brregdate, 'yyyy-MM-dd HH24:MI:SS') as brregdate
+			                    from breporttitle
+                                where  brdel = 'n'
+                		) g
+                		order by brseq desc
+             	) t
+     	) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	<select id="breportSearchListCount" resultType="int">
+		select count(*)
+		from breporttitle
+		where brdel='n'
+			and (gtitle like '%'||#{searchStr}||'%' or otitle like '%'||#{searchStr}||'%' or stitle like '%'||#{searchStr}||'%' or brwhy like '%'||#{searchStr}||'%')
+	</select>
+	
+	<select id="breportSearchList" resultMap="brvo" parameterType="com.kosmo.vo.BreportVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select brseq, nvl(gseq, 0) gseq, gtitle, nvl(oseq, 0) oseq, otitle, nvl(sseq, 0) sseq, stitle, brwhy, to_char(brregdate, 'yyyy-MM-dd HH24:MI:SS') as brregdate
+			                    from breporttitle
+                                where  brdel = 'n'
+                                	and (gtitle like '%'||#{searchStr}||'%' or otitle like '%'||#{searchStr}||'%' or stitle like '%'||#{searchStr}||'%' or brwhy like '%'||#{searchStr}||'%')
+                		) g
+                		order by brseq desc
+             	) t
+     	) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	<select id="rreportListCount" resultType="int">
+		select count(rrseq) as rrcnt
+		from rreport
+		where rrdel='n'
+	</select>
+	
+	<select id="rreportList" resultMap="rrvo">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select rrseq, rseq, rbody, mseq, mid, rrwhy, to_char(rrregdate, 'yyyy-MM-dd HH24:MM:SS') rrregdate, rrdel
+                                from rreporttitle
+                                where rrdel = 'n'
+                		) g
+                		order by rrseq desc
+             	) t
+     	) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	<select id="rreportSearchListCount" resultType="int">
+		select count(*)
+		from rreporttitle
+		where rrdel='n'
+			and (rbody like '%'||#{searchStr}||'%' or mid like '%'||#{searchStr}||'%' or rrwhy like '%'||#{searchStr}||'%')
+	</select>
+	
+	<select id="rreportSearchList" resultMap="rrvo" parameterType="com.kosmo.vo.RreportVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select rrseq, rseq, rbody, mseq, mid, rrwhy, to_char(rrregdate, 'yyyy-MM-dd HH24:MM:SS') rrregdate, rrdel
+                                from rreporttitle
+                                where rrdel = 'n'
+                                	and (rbody like '%'||#{searchStr}||'%' or mid like '%'||#{searchStr}||'%' or rrwhy like '%'||#{searchStr}||'%')
+                		) g
+                		order by rrseq desc
+             	) t
+     	) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	<update id="memberDelete" parameterType="int">
+		update member
+		set mdel='y'
+		where mseq=#{mseq}
+	</update>
+
+	
+	
+	
+	<select id="memberSearchCount" resultType="int">
+		select count(*) as mcnt
+		from member
+		where (mid like '%'||#{searchStr}||'%' or mname like '%'||#{searchStr}||'%')
+	</select>
+
+
+
+	<select id="memberList" resultMap="mvo" parameterType="com.kosmo.vo.MemberVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select mseq, mid, mpw, mname, mbirth, mphone, mmail, mgender, to_char(mregdate, 'yyyy-MM-dd HH24:MI:SS') as mregdate, mdel, msi1, msgg1, memd1, mdetail1, msi2, msgg2, memd2, mdetail2
+			                    from address
+                		) g
+                		order by mseq desc
+             	) t
+     	) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+
+
+	<select id="memberSearchList" resultMap="mvo" parameterType="com.kosmo.vo.MemberVO">
+		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select mseq, mid, mpw, mname, mbirth, mphone, mmail, mgender, to_char(mregdate, 'yyyy-MM-dd HH24:MI:SS') as mregdate, mdel, msi1, msgg1, memd1, mdetail1, msi2, msgg2, memd2, mdetail2
+			                    from address
+		                    	where (mid like '%'||#{searchStr}||'%' or mname like '%'||#{searchStr}||'%')
+                		) g
+                		order by mseq desc
+             	) t
+     	) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+
+	<select id="adminListCount" resultType="int">
+		select count(*)
+		from admin
+	</select>
+	
+	<select id="adminList" resultMap="avo" parameterType="com.kosmo.vo.AdminVO">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+		                select g.*
+		                from (
+		                        select aseq, aid, apw, aname, agrade, aack, to_char(aregdate, 'yyyy-MM-dd HH24:MI:SS') as aregdate
+		                        from admin
+		                ) g
+		                order by aseq desc
+		        ) t
+		) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	<select id="adminSearchListCount" resultType="int">
+		select count(*)
+		from admin
+		where (aid like '%'||#{searchStr}||'%' or aname like '%'||#{searchStr}||'%')
+	</select>
+	
+	<select id="adminSearchList" resultMap="avo" parameterType="com.kosmo.vo.AdminVO">
+		select pt.*
+		from (
+		        select rownum rnum, t.*
+		        from (
+		                select g.*
+		                from (
+		                        select aseq, aid, apw, aname, agrade, aack, to_char(aregdate, 'yyyy-MM-dd HH24:MI:SS') as aregdate
+		                        from admin
+		                        where (aid like '%'||#{searchStr}||'%' or aname like '%'||#{searchStr}||'%')
+		                ) g
+		                order by aseq desc
+		        ) t
+		) pt
+		where rnum between #{startSeq} and #{endSeq}
+	</select>
+	
+	<select id="adminDetail" resultMap="avo" parameterType="int">
+		select aseq, aid, apw, aname, agrade, aack, to_char(aregdate, 'yyyy-MM-dd HH24:MI:SS') as aregdate
+		from admin
+		where aseq=#{aseq}
+	</select>
+	
+	
+	<update id="adminGradeUp" parameterType="int">
+		update admin
+		set agrade='A'
+		where aseq=#{aseq}
+	</update>
+	
+	<update id="adminGradeDown" parameterType="int">
+		update admin
+		set agrade='B'
+		where aseq=#{aseq}
+	</update>
+	
+	<update id="adminAckOn" parameterType="int">
+		update admin
+		set aack='n'
+		where aseq=#{aseq}
+	</update>
+	
+	<update id="adminAckOff" parameterType="int">
+		update admin
+		set aack='y'
+		where aseq=#{aseq}
+	</update>
+
+
+	<insert id="adminJoin">
+      insert into admin
+      values(admin_seq.nextVal, #{aid}, #{apw}, #{aname}, 'B', 'y', sysdate)
+   </insert>
+
+   <select id="adminLogin" parameterType="java.lang.String" resultType="com.kosmo.vo.AdminVO">
+      select aseq, aid, apw, agrade, aack from admin where aid=#{aid} and apw=#{apw}   
+   </select>
+   
+   <update id="adminLeave" parameterType="int">
+      update admin
+      set aack = 'n'
+      where aseq=#{aseq}
+   </update>
+
+	<!-- 하트표시 -->
+	<select id="likeInfo" resultType="Integer">
+	 select
+     	count(1) as cnt
+     from 
+     	(select 
+        	sum(lcnt) as lcnt, mseq, gseq, oseq, sseq 
+        from 
+            liked
+        group by mseq, gseq, oseq, sseq) l
+     left join
+     		gongmo g
+     on l.gseq = g.gseq
+     where l.mseq = #{mseq}
+     and ${column} = #{value}
+	</select>
+
+
+
+	
+</mapper>

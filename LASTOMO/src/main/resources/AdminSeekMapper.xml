@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kosmo.mapper.AdminSeekMapper">
+
+	<resultMap id="adminSeekMap" type="com.kosmo.vo.SeekAllVO">
+		<result property="sseq" column="sseq" />
+		<result property="mseq" column="mseq" />
+		<result property="stitle" column="stitle" />
+		<result property="sbody" column="sbody" />
+		<result property="sregdate" column="sregdate" />
+		<result property="sview" column="sview" />
+		<result property="lcnt" column="lcnt" />
+		<result property="dname" column="dname" />
+		<result property="dseq" column="dseq" />
+		<result property="sdel" column="sdel" />
+		<result property="mid" column="mid" />
+		<result property="mpw" column="mpw" />
+		<result property="mname" column="mname" />
+		<result property="mbirth" column="mbirth" />
+		<result property="mphone" column="mphone" />
+		<result property="mmail" column="mmail" />
+		<result property="mgender" column="mgender" />
+		<result property="mregdate" column="mregdate" />
+
+		<result property="msi1" column="msi1" />
+		<result property="msgg1" column="msgg1" />
+		<result property="memd1" column="memd1" />
+		<result property="mdetail1" column="mdetail1" />
+		<result property="msi2" column="msi2" />
+		<result property="msgg2" column="msgg2" />
+		<result property="memd2" column="memd2" />
+		<result property="mdetail2" column="mdetail2" />
+		<result property="rcnt" column="rcnt" />
+		<result property="rmseq" column="rmseq" />
+		<result property="rmname" column="rmname" />
+		<result property="rbody" column="rbody" />
+		<result property="rregdate" column="rregdate" />
+		<result property="startseq" column="startseq" />
+		<result property="endseq" column="endseq" />
+		<result property="rnum" column="rnum" />
+
+	</resultMap>
+
+	<select id="AdminSeekCount" resultType="int">
+		select count(*) cnt
+		from
+		seek
+		where sdel='n'
+	</select>
+
+	<select id="AdminSeekList" resultType="com.kosmo.vo.SeekAllVO"
+		parameterType="com.kosmo.vo.SeekAllVO">
+		        	select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select s.*
+                		from (
+                    			select distinct sseq, stitle, nvl(lcnt,0)
+		lcnt, mid,
+		to_char(sregdate,'yyyy-MM-dd')as sregdate, sview
+		from seekAll
+		where sdel ='n'
+                		) s
+                		order by s.sseq desc
+             	) t
+     	) pt
+		where rnum between #{startSeq} and #{endSeq}
+		
+
+	</select>
+
+
+	<select id="adminSeekDetail" resultMap="adminSeekMap"
+		parameterType="com.kosmo.vo.SeekAllVO">
+		select ROWNUM as rnum , s.sseq, s.stitle,s.sbody, s.lcnt, s.mid, s.sregdate,
+		s.sview, s.mgender, s.mname, s.msi1, s.msi2,
+		s.msgg1, s.msgg2, s.memd1, s.memd2, s.mdetail1, s.mdetail2
+		from (select distinct s.sseq, s.stitle, s.sbody, nvl(s.lcnt,0) lcnt,
+		m.mid, to_char(s.sregdate,'yyyy-MM-dd')as sregdate, s.sview,
+		m.mgender, m.mname,
+		s.msi1, s.msi2, s.msgg1, s.msgg2, s.memd1, s.memd2,
+		s.mdetail1, s.mdetail2
+		from seekAll s, member m where s.mseq=m.mseq and sdel ='n' and sseq =
+		#{sseq} order by sseq )s
+		order by rnum desc
+	</select>
+
+	<update id="adminSeekUpdate" parameterType="com.kosmo.vo.SeekAllVO">
+		update seek
+		set stitle=#{stitle} , sbody=#{sbody}
+		where sseq = #{sseq}
+	</update>
+
+</mapper>

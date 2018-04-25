@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE  tiles-definitions PUBLIC
+	"-//Aapche Software Foundation//DTD Tiles Configuration 2.0//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_1.dtd"
+>
+
+ -->
+<!DOCTYPE tiles-definitions PUBLIC
+"-//Apache Soft Foundation//DTD Tiles Configuration 3.0//EN"
+"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+
+<tiles-definitions>
+	<!-- I N D E X -->
+	<definition name="index" template="/tiles/layout_index.jsp">
+		<put-attribute name="title" value="0MO"/>
+		<put-attribute name="header" value = "/header.do"/>
+		<put-attribute name="body" value = "/tiles/default_body.jsp"/>
+		<put-attribute name="footer" value = "/tiles/default_footer.jsp"/>
+	</definition>
+	
+	<definition name="index_*_*" extends="index">
+		<put-attribute name="body" value = "/omo/index_{1}_{2}.jsp" />
+	</definition>
+	
+	<!-- 공모전 / 구인 / 구직 / 마이페이지 -->
+	<definition name="side" template="/tiles/layout_side.jsp">
+		<put-attribute name="title" value="0MO"/>
+		<put-attribute name="header" value = "/header.do"/>
+		<put-attribute name="sideBar" value = "/tiles/default_side_bar.jsp"/>
+		<put-attribute name="sideBody" value = "/tiles/default_side_body.jsp"/>
+		<put-attribute name="footer" value = "/tiles/default_footer.jsp"/>
+	</definition>
+	
+	<definition name="gongmo_*_*" extends="side">
+		<put-attribute name="sideBar" value = "/gongmo_side_bar.do"/>
+		<put-attribute name="sideBody" value = "/omo/gongmo_{1}_{2}.jsp"/>
+	</definition>
+	
+	<definition name="guin_*_*" extends="side">
+		<put-attribute name="sideBar" value = "/guin_side_bar.do"/>
+		<put-attribute name="sideBody" value = "/omo/guin_{1}_{2}.jsp"/>
+	</definition>
+	
+	<definition name="gujik_*_*" extends="side">
+		<put-attribute name="sideBar" value = "/gujik_side_bar.do"/>
+		<put-attribute name="sideBody" value = "/omo/gujik_{1}_{2}.jsp"/>
+	</definition>
+	
+	<definition name="my_*_*" extends="side">
+		<put-attribute name="sideBar" value = "/omo/my_side_bar.jsp"/>
+		<put-attribute name="sideBody" value = "/omo/my_{1}_{2}.jsp"/>
+	</definition>
+	
+	<!-- A D M I N - I N D E X -->
+	<definition name="admin" template="/tiles/layout_admin.jsp">
+		<put-attribute name="title" value="0MO_ADMIN"/>
+		<put-attribute name="header" value = "/tiles/admin_header.jsp"/>
+		<put-attribute name="body" value = "/tiles/admin_body.jsp"/>
+	</definition>
+	
+	<definition name="admin_*_*" extends="admin">
+		<put-attribute name="body" value = "/omo/admin_{1}_{2}.jsp"/>
+	</definition>
+	
+</tiles-definitions>
