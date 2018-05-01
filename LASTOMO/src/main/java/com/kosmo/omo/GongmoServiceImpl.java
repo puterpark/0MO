@@ -137,6 +137,10 @@ public class GongmoServiceImpl implements GongmoService {
 		return dao.gongmoInsert(gvo);
 	}
 
+	@Override
+	public int adminGongmoInsert(GongmoVO gvo) {
+		return dao.adminGongmoInsert(gvo);
+	}
 
 	@Override
 	public int gongmoFieldInsert(int fseq) {

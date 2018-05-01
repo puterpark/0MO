@@ -12,7 +12,10 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -43,6 +46,47 @@ public class GongmoController {
 	private GongmoService service;
 	@Autowired
 	private PayService paysvc;
+	
+	
+	@RequestMapping(value = "/ajaxlist.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ArrayList<GongmoVO> ajaxGongmoList(@RequestBody GongmoVO gvo) throws Exception {
+		
+		ArrayList<GongmoVO> list = service.gongmoList(gvo.getSseq(), gvo.getEseq());
+		
+		return list;
+	}
+	
+	@RequestMapping(value = "/ajaxdetail.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<GongmoVO> ajaxGongmoDetail(@RequestBody GongmoVO gvo) throws Exception {
+		
+		gvo = service.gongmoDetail(gvo.getGseq());
+		
+		return new ResponseEntity<GongmoVO>(gvo, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/ajaxinsert.do", method = RequestMethod.POST)
+	@ResponseBody
+	public int ajaxGongmoInsert(@RequestBody GongmoVO gvo) throws Exception {
+
+		int res = 0;
+		
+		res = service.adminGongmoInsert(gvo);
+		
+		return res;
+	}
+	
+	
+	@RequestMapping(value = "/listForAndroid.do", method = RequestMethod.GET)
+	@ResponseBody
+//	public String listForAndroid() throws Exception {
+	public ArrayList<FieldVO> listForAndroid() throws Exception {
+		ArrayList<FieldVO> flist = service.fieldList();
+		
+//		return "testtest";
+		return flist;
+	}
 	
 	
 	@RequestMapping(value = "/gongmo_side_bar.do", method = RequestMethod.GET)

@@ -48,6 +48,8 @@ public int breportCount();
 	
 	public int gongmoInsert(GongmoVO gvo);
 	
+	public int adminGongmoInsert(GongmoVO gvo);
+	
 	public int gongmoFieldInsert(int fseq);
 	
 	public int gongmoFieldUpdate(@Param("gseq") int gseq, @Param("fseq") int fseq);

@@ -42,6 +42,8 @@ public interface GongmoService {
 	
 	public int gongmoInsert(GongmoVO gvo);
 	
+	public int adminGongmoInsert(GongmoVO gvo);
+	
 	public int gongmoFieldInsert(int fseq);
 	
 	public int gongmoFieldUpdate(int gseq, int fseq);
