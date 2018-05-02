@@ -77,6 +77,28 @@ public class GongmoController {
 		return res;
 	}
 	
+	@RequestMapping(value = "/ajaxdelete.do", method = RequestMethod.POST)
+	@ResponseBody
+	public int ajaxGongmoDelete(@RequestBody GongmoVO gvo) throws Exception {
+
+		int res = 0;
+		
+		res = service.gongmoDelete(gvo.getGseq());
+		
+		return res;
+	}
+	
+	@RequestMapping(value = "/ajaxupdate.do", method = RequestMethod.POST)
+	@ResponseBody
+	public int ajaxGongmoupdate(@RequestBody GongmoVO gvo) throws Exception {
+
+		int res = 0;
+		
+		res = service.gongmoUpdate(gvo);
+		
+		return res;
+	}
+	
 	
 	@RequestMapping(value = "/listForAndroid.do", method = RequestMethod.GET)
 	@ResponseBody
@@ -851,7 +873,7 @@ public class GongmoController {
 		System.out.println(gvo.getGtitle());
 		int resGongmo = 0;
 		if(gvo.getGbody().length() < 2000){
-			resGongmo = service.gongmoInsert(gvo);
+			resGongmo = service.adminGongmoInsert(gvo);
 		} else {
 			System.out.println("[LOG] gbody 한계치 이상 - SKIP");
 		}
