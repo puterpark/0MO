@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kosmo.common.PagingUtil;
+import com.kosmo.vo.BreportVO;
 import com.kosmo.vo.DutyVO;
 import com.kosmo.vo.FieldVO;
 import com.kosmo.vo.GongmoVO;
@@ -89,7 +90,9 @@ public class SeongHyunController {
 		System.out.println("�꽦�쁽�떆諛�");
 
 		//�뙆�씪�씠 ���옣�맆 path �꽕�젙 
-		String path = "C:\\Users\\Puter\\Desktop\\dddd\\lastOMO\\OMO\\src\\main\\webapp\\uploads\\pdf"; 
+		String path = "C:\\git_repository\\0MO\\LASTOMO\\src\\main\\webapp\\uploads\\pdf"; 
+		
+		
 		Map returnObject = new HashMap(); 
 		try {
 
@@ -199,7 +202,7 @@ public class SeongHyunController {
 	
 	
 	@RequestMapping(value = "/gujik_duty.do", method = RequestMethod.GET)
-	public ModelAndView gongmoListField(HttpServletRequest request, HttpServletResponse response) {
+	public ModelAndView gujikListDuty(HttpServletRequest request, HttpServletResponse response) {
 		String dseq = request.getParameter("dseq");
 		
 		int currentPage = 1;
@@ -231,8 +234,7 @@ public class SeongHyunController {
 		mav.addObject("dutyList", dutyList);
 		
 		mav.addObject("dseq", dseq);
-		mav.addObject("seekallList", list);
-		//mav.addObject("gflist", gflist);
+		mav.addObject("seekAllList", list);
 		mav.addObject("gujikpaging", html);
 
 		mav.setViewName("gujik_body_list");
@@ -407,6 +409,16 @@ public class SeongHyunController {
 		return "redirect:/gujik.do";
 	}
 	
+	
+	@RequestMapping(value = "/gujik_report.do", method = RequestMethod.POST)
+	public String seekReport(@RequestParam("brwhy") String brwhy, @RequestParam("sseq") int sseq) {
+		BreportVO brvo = new BreportVO();
+		brvo.setBrwhy(brwhy);
+		brvo.setSseq(sseq);
+		ssvc.seekReport(brvo);
+		
+		return "redirect:/gujik_detail.do?sseq="+sseq;
+	}
 
 	
 
@@ -470,8 +482,8 @@ public class SeongHyunController {
 		PagingUtil pu = new PagingUtil("/guin.do?"
 				, currentPage
 				, totalCount  //------------
-				, 10	//�꽑�깮�븳 2踰� 釉붾윮�뿉 �굹���궇 寃뚯떆臾� 媛��닔
-				, 5 // 1 2 [�떎�쓬]
+				, 10
+				, 5
 				);
 
 		String html = pu.getPagingHtml();
@@ -483,9 +495,50 @@ public class SeongHyunController {
 		ModelAndView mav = new ModelAndView();
 
 		mav.addObject("list", offerList);		
+		mav.addObject("duty", offerList);		
 		mav.addObject("guinpaging", html);
 
 		mav.setViewName("guin_body_list");		
+		return mav;
+	}
+	
+	@RequestMapping(value = "/guin_duty.do", method = RequestMethod.GET)
+	public ModelAndView guinListDuty(HttpServletRequest request, HttpServletResponse response) {
+		String dseq = request.getParameter("dseq");
+		
+		int currentPage = 1;
+		
+		if(request.getParameter("currentPage") != null) {
+			currentPage = Integer.parseInt(request.getParameter("currentPage"));
+		}
+		
+		int totalCount = osvc.offerDutyCount(Integer.parseInt(dseq));
+		
+		PagingUtil pu = new PagingUtil("/guin_duty.do?dseq="+dseq
+										, currentPage
+										, totalCount  //------------
+										, 10	//보여줄갯수
+										, 5 // 1 2 [페이지갯수]
+										);
+		String html = pu.getPagingHtml();
+		
+		ArrayList<OfferAllVO> list = osvc.offerAllListDuty(Integer.parseInt(dseq), pu.getStartSeq(), pu.getEndSeq());
+		
+		ArrayList<OfferAllVO> offerList = osvc.memberOfferLists(pu.getStartSeq(), pu.getEndSeq());
+		
+		for(int i = 0; i < list.size(); i++) {
+			ArrayList<DutyVO> tempList = osvc.memberOfferDuty(list.get(i).getDseq());
+			list.get(i).setDlist(tempList);
+		}
+		
+		ModelAndView mav = new ModelAndView();
+		
+		mav.addObject("dseq", dseq);
+		mav.addObject("list", list);
+		mav.addObject("duty", offerList);
+		mav.addObject("guinpaging", html);
+
+		mav.setViewName("guin_body_list");
 		return mav;
 	}
 	
@@ -542,7 +595,7 @@ public class SeongHyunController {
 		mav.addObject("ovo", ovo);
 		System.out.println(ovo.getGtitle());
 		System.out.println(glist.get(0).getGtitle());
-
+		System.out.println(ovo.getMname());
 		
 		mav.setViewName("guin_body_detail");
 		return mav;
@@ -598,6 +651,7 @@ public class SeongHyunController {
 			System.out.println(ovo.getGseq());
 			int mseq = Integer.parseInt(session.getAttribute("SESS_MSEQ").toString());
 			ovo.setMseq(mseq);
+//			ovo.setGseq(ovo.getGseq());
 			osvc.memberOfferInsert(ovo);
 			
 			String[] unit = ovo.getCheckbox().split(",");
@@ -627,6 +681,17 @@ public class SeongHyunController {
 				resOfferDuty += osvc.memberOfferDutyUpdate(Integer.parseInt(unit[i]), oseq);
 			}
 
+			return "redirect:/guin_detail.do?oseq="+oseq;
+		}
+		
+		@RequestMapping(value = "/guin_report.do", method = RequestMethod.POST)
+		public String offerReport(@RequestParam("brwhy") String brwhy, @RequestParam("oseq") int oseq) {
+			BreportVO brvo = new BreportVO();
+			brvo.setBrwhy(brwhy);
+			brvo.setOseq(oseq);
+			
+			osvc.offerReport(brvo);
+			
 			return "redirect:/guin_detail.do?oseq="+oseq;
 		}
 	

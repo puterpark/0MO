@@ -52,6 +52,10 @@
 		<result property="pffile" column="pffile"/>
 	</resultMap>
 
+	<insert id="seekReport" parameterType="com.kosmo.vo.BreportVO">
+		insert into breport(brseq, sseq, brwhy, brregdate, brdel)
+		values (breport_seq.nextval, #{sseq}, #{brwhy}, sysdate, 'n')
+	</insert>
 	
 	<select id="seekIndexList" resultMap="seekdao" resultType="com.kosmo.vo.SeekAllVO">
 	                   
@@ -121,6 +125,10 @@
 		select distinct sseq, sview, lcnt, mseq, mid, msi1, msgg1, memd1, mdetail1, mgender, stitle, sbody, pffile from seekall where sseq= #{sseq}
 	</select>
 	
+	<select id="mSeekDetail" resultType="com.kosmo.vo.SeekAllVO" parameterType="int">
+		select distinct sseq, sview, lcnt, mseq, mid, msi1, msgg1, memd1, mdetail1, mgender, stitle, to_char(sregdate, 'yyyy-MM-dd') sregdate, sbody, pffile from seekall where sseq= #{sseq}
+	</select>
+	
 	<insert id="gujikInsert" >
 	insert into seek(sseq, mseq, stitle, sbody, sregdate, sdel, pfseq)
 	values(seek_seq.nextval, #{mseq}, #{stitle}, #{sbody}, to_char(sysdate, 'yyyymmdd'), 'n', #{pfseq})
@@ -171,10 +179,10 @@
 		update seek set sdel = 'y' where sseq = #{sseq}
 	</update>
 	
-	<update id="seekViewUp" parameterType="int">
-		update seek
-		set sview = sview+1
-		where sseq=#{sseq}
+		<update id="seekViewUp" parameterType="int">
+		
+		update seek set sview =  (select nvl(sview,0)+1 sview from seek where sseq = #{sseq}) where sseq = #{sseq}
+		
 	</update>
 	
 	

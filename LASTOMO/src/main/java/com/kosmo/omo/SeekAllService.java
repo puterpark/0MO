@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.kosmo.vo.BreportVO;
 import com.kosmo.vo.DutyVO;
 import com.kosmo.vo.MemberVO;
 import com.kosmo.vo.PofolVO;
@@ -13,6 +14,8 @@ public interface SeekAllService {
 	
 	public ArrayList<SeekAllVO> seekIndexList();
 	
+	public int seekReport(BreportVO brvo);
+	
 	public ArrayList<SeekAllVO> seekAllList(int startseq, int endseq);
 	
 	public ArrayList<SeekAllVO> seekAllListDuty(int dseq, int startseq, int endseq);
@@ -20,6 +23,8 @@ public interface SeekAllService {
 	public ArrayList<DutyVO> seekDuty(int sseq);
 	
 	public SeekAllVO seekDetail(SeekAllVO vo);
+
+	public SeekAllVO mSeekDetail(int sseq);
 	
 	public int seekCount();
 	
@@ -45,7 +50,6 @@ public interface SeekAllService {
 	
 	public int seekViewUp(int sseq);
 	
-
 	public ArrayList<DutyVO> dutyList();
 	
 	public int gujikInsert(SeekAllVO vo);

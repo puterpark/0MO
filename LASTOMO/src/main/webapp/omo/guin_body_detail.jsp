@@ -84,12 +84,12 @@
 										<col style="width: 70%;"></col>
 
 										<tr>
-											<td><b>이름</b></td>
-											<td>${ovo.mname}</td>
+											<td><b>아이디</b></td>
+											<td>${ovo.mid}</td>
 										</tr>
 										<tr>
 											<td><b>활동지역</b></td>
-											<td>${ovo.msi2} ${ovo.msgg2}</td>
+											<td>${ovo.msi1} ${ovo.msgg1}</td>
 										</tr>
 										<tr>
 											<td><b>성별</b></td>

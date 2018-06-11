@@ -137,7 +137,8 @@ function paypofol(pdf){
 										</tr>
 										<tr>
 											<td><b>활동지역</b></td>
-											<td>${seekDetail.msi1} ${seekDetail.msgg1} ${seekDetail.memd1} ${seekDetail.mdetail1}</td>
+											<td>${seekDetail.msi1} ${seekDetail.msgg1} ${seekDetail.memd1} </td>
+											
 										</tr>
 										<tr>
 											<td><b>성별</b></td>

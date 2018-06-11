@@ -43,8 +43,6 @@ public class OfferAllVO {
 	private ArrayList<DutyVO> dlist;
 	private ArrayList<OfferAllVO> glist;
 	
-
-	
 	
 	public int getOseq() {
 		return oseq;

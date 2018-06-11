@@ -36,9 +36,9 @@
 				<div class="contact-details">
 					<h4>Contact Us</h4>
 					<ul class="contact">
-						<li><p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> 1234 Street Name, City Name, United States</p></li>
+						<li><p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> 서울시 금천구 가산동 426-5 월드메르디앙 2차 410호</p></li>
 						<li><p><i class="fas fa-phone"></i> <strong>Phone:</strong> (123) 456-789</p></li>
-						<li><p><i class="far fa-envelope"></i> <strong>Email:</strong> <a href="mailto:mail@example.com">mail@example.com</a></p></li>
+						<li><p><i class="far fa-envelope"></i> <strong>Email:</strong> <a href="mailto:mail@example.com">puterpark@me.com</a></p></li>
 					</ul>
 				</div>
 			</div>

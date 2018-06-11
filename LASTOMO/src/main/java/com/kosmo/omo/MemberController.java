@@ -36,7 +36,8 @@ public class MemberController {
 	public String login(
 			@RequestParam(value="mid", required=false) String mid,
 			@RequestParam(value="mpw", required=false) String mpw,
-			HttpSession session) {
+			HttpSession session,
+			HttpServletRequest request) {
 
 		MemberVO mvo = new MemberVO();
 		System.out.println(mid);
@@ -51,16 +52,21 @@ public class MemberController {
 		} else {
 			System.out.println("로그인이 되지 않았습니다. ");
 		}
+		String referer = request.getHeader("Referer");
 	
-		return "redirect:/index.do";
+		return "redirect:"+referer;
+//		return "redirect:/index.do";
 	}
-
+	
 
 	@RequestMapping(value = "/logout.do", method = RequestMethod.GET)
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session, HttpServletRequest request) {
 
 		session.invalidate();
 
+//		String referer = request.getHeader("Referer");
+
+//		return "redirect:"+referer;
 		return "redirect:/index.do";
 	}  
 
@@ -171,6 +177,7 @@ public class MemberController {
 
 		mav.addObject("glist", map.get("glist"));
 		mav.addObject("slist", map.get("slist"));
+		mav.addObject("olist", map.get("olist"));
 		mav.setViewName("my_body_list");
 
 		return mav;

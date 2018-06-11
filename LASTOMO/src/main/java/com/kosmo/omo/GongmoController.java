@@ -48,56 +48,77 @@ public class GongmoController {
 	private PayService paysvc;
 	
 	
-	@RequestMapping(value = "/ajaxlist.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/rtest.do", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<GongmoVO> ajaxGongmoList(@RequestBody GongmoVO gvo) throws Exception {
+	public ModelAndView rtest() throws Exception {
 		
-		ArrayList<GongmoVO> list = service.gongmoList(gvo.getSseq(), gvo.getEseq());
+		ModelAndView mav = new ModelAndView();
 		
-		return list;
+		mav.setViewName("shift/index");
+		return mav;
 	}
 	
-	@RequestMapping(value = "/ajaxdetail.do", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<GongmoVO> ajaxGongmoDetail(@RequestBody GongmoVO gvo) throws Exception {
-		
-		gvo = service.gongmoDetail(gvo.getGseq());
-		
-		return new ResponseEntity<GongmoVO>(gvo, HttpStatus.OK);
-	}
 	
-	@RequestMapping(value = "/ajaxinsert.do", method = RequestMethod.POST)
-	@ResponseBody
-	public int ajaxGongmoInsert(@RequestBody GongmoVO gvo) throws Exception {
-
-		int res = 0;
-		
-		res = service.adminGongmoInsert(gvo);
-		
-		return res;
-	}
-	
-	@RequestMapping(value = "/ajaxdelete.do", method = RequestMethod.POST)
-	@ResponseBody
-	public int ajaxGongmoDelete(@RequestBody GongmoVO gvo) throws Exception {
-
-		int res = 0;
-		
-		res = service.gongmoDelete(gvo.getGseq());
-		
-		return res;
-	}
-	
-	@RequestMapping(value = "/ajaxupdate.do", method = RequestMethod.POST)
-	@ResponseBody
-	public int ajaxGongmoupdate(@RequestBody GongmoVO gvo) throws Exception {
-
-		int res = 0;
-		
-		res = service.gongmoUpdate(gvo);
-		
-		return res;
-	}
+//	@RequestMapping(value = "/ajaxlist.do", method = RequestMethod.POST)
+//	@ResponseBody
+//	public ArrayList<GongmoVO> ajaxGongmoList(@RequestBody GongmoVO gvo) throws Exception {
+//		
+//		System.out.println("수신된 데이터 : {\"sseq\":" + gvo.getSseq() + ", \"eseq\":" + gvo.getEseq() + "}");
+//		
+//		
+//		
+//		ArrayList<GongmoVO> list = service.gongmoList(gvo.getSseq(), gvo.getEseq());
+//		
+//		for(int i = 0; i < 10; i++) {
+//			System.out.println(i+ "번째 Gtitle : " + list.get(i).getGtitle());
+//			System.out.println(i+ "번째 Gspon : " + list.get(i).getGspon());
+//		}
+//		
+//		
+//		return list;
+//	}
+//	
+//	@RequestMapping(value = "/ajaxdetail.do", method = RequestMethod.POST)
+//	@ResponseBody
+//	public ResponseEntity<GongmoVO> ajaxGongmoDetail(@RequestBody GongmoVO gvo) throws Exception {
+//		
+//		gvo = service.gongmoDetail(gvo.getGseq());
+//		
+//		return new ResponseEntity<GongmoVO>(gvo, HttpStatus.OK);
+//	}
+//	
+//	@RequestMapping(value = "/ajaxinsert.do", method = RequestMethod.POST)
+//	@ResponseBody
+//	public int ajaxGongmoInsert(@RequestBody GongmoVO gvo) throws Exception {
+//
+//		int res = 0;
+//		
+//		res = service.adminGongmoInsert(gvo);
+//		
+//		return res;
+//	}
+//	
+//	@RequestMapping(value = "/ajaxdelete.do", method = RequestMethod.POST)
+//	@ResponseBody
+//	public int ajaxGongmoDelete(@RequestBody GongmoVO gvo) throws Exception {
+//
+//		int res = 0;
+//		
+//		res = service.gongmoDelete(gvo.getGseq());
+//		
+//		return res;
+//	}
+//	
+//	@RequestMapping(value = "/ajaxupdate.do", method = RequestMethod.POST)
+//	@ResponseBody
+//	public int ajaxGongmoupdate(@RequestBody GongmoVO gvo) throws Exception {
+//
+//		int res = 0;
+//		
+//		res = service.gongmoUpdate(gvo);
+//		
+//		return res;
+//	}
 	
 	
 	@RequestMapping(value = "/listForAndroid.do", method = RequestMethod.GET)
@@ -277,7 +298,8 @@ public class GongmoController {
 		int resGongmoField = 0;
 		MultipartFile ufile = gvo.getUfile();
 		
-		String dir = "C:\\Users\\Puter\\Desktop\\dddd\\lastOMO\\OMO\\src\\main\\webapp\\uploads\\gposter";
+//		String dir = "C:\\Users\\Puter\\Desktop\\dddd\\lastOMO\\OMO\\src\\main\\webapp\\uploads\\gposter";
+		String dir = "C:\\git_repository\\0MO\\LASTOMO\\src\\main\\webapp\\uploads\\gposter";
 		
 		//신규첨부파일
 		if(!ufile.isEmpty()) {
@@ -344,7 +366,8 @@ public class GongmoController {
 		System.out.println("[LOG] " + resDelField + "건 분야 삭제");
 		
 		MultipartFile ufile = gvo.getUfile();
-		String dir = "C:\\Users\\Puter\\Desktop\\dddd\\lastOMO\\OMO\\src\\main\\webapp\\uploads\\gposter";
+		String dir = "C:\\git_repository\\0MO\\LASTOMO\\src\\main\\webapp\\uploads\\gposter";
+		
 		String gposter = gvo.getGposter();
 		System.out.println("[LOG] 현재 파일 : " + gposter);
 		
@@ -490,28 +513,32 @@ public class GongmoController {
 		
 		AdminVO avo = service.adminLogin(aid, apw);
 			
-		if(avo.getAgrade().equals("A") || avo.getAgrade().equals("Super")) {
-			session.setAttribute("SESS_ASEQ", avo.getAseq());
-			session.setAttribute("SESS_AID", avo.getAid());
-			session.setAttribute("SESS_AGRADE", avo.getAgrade());
-			
-			
-			mav.addObject("SESS_ASEQ",session.getAttribute("SESS_ASEQ"));
-			mav.addObject("SESS_AID",session.getAttribute("SESS_AID"));
-			mav.addObject("SESS_AGRADE",session.getAttribute("SESS_AGRADE"));
-			mav.addObject("iplist", indexPayList);
-			mav.addObject("paycnt", payCnt);
-			
-			mav.addObject("glist", map.get("glist"));
-			mav.addObject("list", map.get("list"));
-			mav.addObject("mlist", mlist);
-			mav.addObject("brlist", brlist);
-			mav.addObject("rrlist", rrlist);
-			mav.addObject("pcount", pcount);
-			mav.addObject("gcount", gcount);
-			mav.addObject("mcount", mcount);
-			mav.addObject("rcount", rcount);
-			mav.setViewName("admin_body_index");
+		if(avo != null) {
+			if(avo.getAgrade().equals("A") || avo.getAgrade().equals("Super")) {
+				session.setAttribute("SESS_ASEQ", avo.getAseq());
+				session.setAttribute("SESS_AID", avo.getAid());
+				session.setAttribute("SESS_AGRADE", avo.getAgrade());
+				
+				
+				mav.addObject("SESS_ASEQ",session.getAttribute("SESS_ASEQ"));
+				mav.addObject("SESS_AID",session.getAttribute("SESS_AID"));
+				mav.addObject("SESS_AGRADE",session.getAttribute("SESS_AGRADE"));
+				mav.addObject("iplist", indexPayList);
+				mav.addObject("paycnt", payCnt);
+				
+				mav.addObject("glist", map.get("glist"));
+				mav.addObject("list", map.get("list"));
+				mav.addObject("mlist", mlist);
+				mav.addObject("brlist", brlist);
+				mav.addObject("rrlist", rrlist);
+				mav.addObject("pcount", pcount);
+				mav.addObject("gcount", gcount);
+				mav.addObject("mcount", mcount);
+				mav.addObject("rcount", rcount);
+				mav.setViewName("admin_body_index");
+			} else {
+				mav.setViewName("admin_body_login");
+			}
 		} else {
 			mav.setViewName("admin_body_login");
 		}
@@ -679,7 +706,7 @@ public class GongmoController {
 		System.out.println("[LOG] " + resDelField + "건 분야 삭제");
 		
 		MultipartFile ufile = gvo.getUfile();
-		String dir = "C:\\34DEV\\Java\\workspace_spring2\\OMO\\src\\main\\webapp\\uploads\\gposter";
+		String dir = "C:\\git_repository\\0MO\\LASTOMO\\src\\main\\webapp\\uploads\\gposter";
 		String gposter = gvo.getGposter();
 		System.out.println("[LOG] 현재 파일 : " + gposter);
 		
@@ -877,6 +904,7 @@ public class GongmoController {
 		} else {
 			System.out.println("[LOG] gbody 한계치 이상 - SKIP");
 		}
+		
 		
 		return resGongmo;
 	}

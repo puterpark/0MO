@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kosmo.mapper.*;
+import com.kosmo.vo.BreportVO;
 import com.kosmo.vo.DutyVO;
 import com.kosmo.vo.FieldVO;
 import com.kosmo.vo.MemberVO;
@@ -22,6 +23,11 @@ public class SeekAllServiceImpl implements SeekAllService{
 	@Override
 	public ArrayList<SeekAllVO> seekIndexList(){
 		return SeekAllMapper.seekIndexList();
+	}
+	
+	@Override
+	public int seekReport(BreportVO brvo){
+		return SeekAllMapper.seekReport(brvo);
 	}
 	
 	@Override
@@ -78,6 +84,20 @@ public class SeekAllServiceImpl implements SeekAllService{
 		
 		return svo;
 	}
+
+	@Override
+public SeekAllVO mSeekDetail(int sseq) {
+	SeekAllVO svo = SeekAllMapper.mSeekDetail(sseq);
+	
+	return svo;
+}
+	
+	@Override
+	public int seekViewUp(int sseq){
+		return SeekAllMapper.seekViewUp(sseq);
+	}
+	
+
 	
 	@Override
 	public ArrayList<SeekAllVO> seekDetailDuty(SeekAllVO vo){
@@ -124,10 +144,6 @@ public class SeekAllServiceImpl implements SeekAllService{
 		return SeekAllMapper.seekDelete(sseq);
 	}
 	
-	@Override
-	public int seekViewUp(int sseq){
-		return SeekAllMapper.seekViewUp(sseq);
-	}
 
 	
 	@Override

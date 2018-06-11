@@ -89,8 +89,15 @@
 		<id property="gseq" column="gseq" />
 		<result property="gtitle" column="gtitle" />
 	</resultMap>
+	
+	<insert id="offerReport" parameterType="com.kosmo.vo.BreportVO">
+		insert into breport(brseq, oseq, brwhy, brregdate, brdel)
+		values (breport_seq.nextval, #{oseq}, #{brwhy}, sysdate, 'n')
+	</insert>
 
-
+	<select id = "offerDutyCount" resultType="int">
+	 select count(*) cnt from duofferall where odel='n' and dseq=#{dseq}
+	</select>
 
 	<select id="offerAllList" resultType="com.kosmo.vo.OfferAllVO">
 
@@ -110,7 +117,7 @@
                 		from (
                     			select d.oseq, d.gseq, d.otitle, d.obody, to_char(d.oregdate,'yyyy-MM-dd')as oregdate, d.oview, d.mseq, d.mname, d.dseq, nvl(d.dname,'없음') dname, d.lcnt, d.msi1, d.msgg1, d.msi2, d.msgg2, g.gtitle, m.mid
                                 from duoffer d, gongmo g, member m
-                                where d.gseq = g.gseq
+                                where d.gseq = g.gseq(+)
                                 and m.mseq = d.mseq and odel = 'n'
                 		) g
                 		order by oseq desc
@@ -119,6 +126,29 @@
 		where rnum between #{startseq} and #{endseq}
 	</select>
 
+	<select id = "offerAllListDuty" resultMap = "offerdao" resultType="com.kosmo.vo.OfferAllVO">
+	   		   		select pt.*
+		from (
+        		select rownum rnum, t.*
+        		from (
+		                select g.*
+                		from (
+                    			select oseq, otitle, gtitle, oregdate, oview, odel, mseq, mid, nvl(lcnt, 0) lcnt , nvl(dname,'없음') dname, dseq
+			                    from duofferall
+			                    where odel = 'n'
+			                    	and dseq=#{dseq}
+                		) g
+                		order by g.oseq desc
+             	) t
+     	) pt
+		where rnum between #{startseq} and #{endseq}
+	</select>
+
+	<update id="offerViewUp" parameterType="int">
+		
+		update offer set oview =  (select nvl(oview,0)+1 oview from offer where oseq = #{oseq}) where oseq = #{oseq}
+		
+	</update>
 
 	<select id="memberGongList" resultType="com.kosmo.vo.OfferAllVO">
 		select gtitle, gseq

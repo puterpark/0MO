@@ -130,7 +130,7 @@
 					 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
 						target="_blank" alt="Share on Facebook" style="padding-left: 10px; padding-right: 10px;">&nbsp;&nbsp;<i class="fab fa-facebook-f">&nbsp;</i></button>
 				<button type="button" class="btn btn-outline btn-light mb-2" onclick="javascript:history.back()"><i class="far fa-envelope"></i></button>
-				<c:if test="${gvo.mvo.mseq == SESS_MSEQ || SESS_MSEQ == 1}">
+				<c:if test="${SESS_MSEQ != null}">
 				<button type="button" class="btn btn-outline btn-warning mb-2" id="reportBtn"><i class="fas fa-ban"></i></button>
 				</c:if>
 			</div>

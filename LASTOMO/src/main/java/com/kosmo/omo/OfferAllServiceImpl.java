@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kosmo.mapper.OfferAllMapper;
+import com.kosmo.vo.BreportVO;
 import com.kosmo.vo.DutyVO;
 import com.kosmo.vo.OfferAllVO;
 import com.kosmo.vo.SeekAllVO;
@@ -22,6 +23,16 @@ public class OfferAllServiceImpl implements OfferAllService{
 		int i = OfferAllMapper.memberOfferCount();
 		return i;
 	}
+	
+	@Override
+	public int offerDutyCount(int dseq) {
+		return OfferAllMapper.offerDutyCount(dseq);
+	}
+	
+	@Override
+	public int offerReport(BreportVO brvo) {
+		return OfferAllMapper.offerReport(brvo);
+	}
 
 	@Override
 	public ArrayList<OfferAllVO> memberOfferLists(int startseq, int endseq) {
@@ -35,17 +46,42 @@ public class OfferAllServiceImpl implements OfferAllService{
 
 		return list;
 	}
+		
+	@Override
+	public ArrayList<DutyVO> memberOfferDuty(int oseq) {
+		return OfferAllMapper.memberOfferDuty(oseq);
+	}
+	
+	@Override
+	public ArrayList<OfferAllVO> offerAllListDuty(int dseq, int startseq, int endseq) {
+		ArrayList<OfferAllVO> offerAllListDuty = OfferAllMapper.offerAllListDuty(dseq, startseq, endseq);
+		
+		for(int i = 0; i < offerAllListDuty.size(); i++) {
+			ArrayList<DutyVO> tempList = OfferAllMapper.memberOfferDuty(offerAllListDuty.get(i).getOseq());
+			offerAllListDuty.get(i).setDlist(tempList);
+		}
+		
+		return offerAllListDuty;
+	}
 
 	@Override
 	public OfferAllVO memberOfferDetail(int oseq) {
 		System.out.println("[LOG] : Enter OfferAllService, memberOfferDetail() ");
 		OfferAllVO ovo = OfferAllMapper.memberOfferDetail(oseq); //1
-		System.out.println(ovo.getOtitle());
+		System.out.println("service: "+ovo.getOtitle()+" "+ovo.getMname());
 		ArrayList<DutyVO> tempList = OfferAllMapper.memberOfferDuty(oseq); //3
 		ovo.setDlist(tempList);
+		OfferAllMapper.offerViewUp(oseq);
+
 
 		return ovo;
 	}
+	
+	@Override
+	public int offerViewUp(int oseq){
+		return OfferAllMapper.offerViewUp(oseq);
+	}
+	
 
 	@Override
 	public int memberOfferDutyDelete(int oseq) {

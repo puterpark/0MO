@@ -10,9 +10,12 @@
 			var val = [];
 			var test = [];
 			var a = $("#gtitle option:selected").val();
+			
 			console.log(a);
+			
 			$('#gseq').val(a);
 			test = $(":checkbox:checked");
+			console.log("gseq : "+a);
 			console.log("바 랭쓰 : " + test.length);
 			$("#flength").attr("value", test.length);
 			var str = "";
@@ -24,7 +27,7 @@
 				console.log(str);
 				$("#checkbox").val(str);
 				console.log("=========="+$("#checkbox").val());
-				$("#inputForm").submit(); 
+				$("#inputForm").submit();
 				
 			} else {
 				swal("직무를 1 ~ 3개로 선택해주세요.");
@@ -63,14 +66,17 @@
 									<div class="form-group row">
 										<label class="col-lg-3 control-label text-lg-right pt-2">준비중인
 											공모전</label>
-										<div class="col-lg-6">
-											<select name="gtitle" id="gtitle">
+											<div class="col-lg-6">
+									<div class="input-group mb-3">
+									<select class="form-control form-control-lg mb-3" name="pfseq">
+													<option value=-1>선택 안함</option>
 												<c:forEach items="${glist}" var="glist">
-													<option value="${glist.gseq}">${glist.gtitle}</option>
+													<option value="${glist.gseq}" id="gtitle">${glist.gtitle}</option>
 												</c:forEach>
-											</select>
-												<input type="hidden" id="gseq" name="gseq" value="">
-										</div>
+												</select>
+												<!-- <input type="hidden" id="gseq" name="gseq" value=""> -->
+									</div>
+								</div>
 									</div>
 									<div class="form-group row">
 										<label class="col-lg-3 control-label text-lg-right pt-2">필요직무</label>
@@ -83,6 +89,7 @@
                                  </label>
                               </div>
                            </c:forEach>
+                           
 											<input type="hidden" id="checkbox" name="checkbox" value="">
 										</div>
 									</div>

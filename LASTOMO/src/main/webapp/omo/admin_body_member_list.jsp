@@ -6,21 +6,21 @@
 <script>
 	function block(mseq) {
 		swal({
-			title: "차단각? 되돌릴 수 없습니다.",
+			title: "선택한 회원을 차단하겠습니까?",
 			icon: "warning",
 			buttons: true,
 			dangerMode: true,
 		})
 		.then((willDelete) => {
 			if (willDelete) {
-				swal("앙 차단띠", {
+				swal("차단되었습니다.", {
 				icon: "success",
 			})
 			.then(() => {
 				document.getElementById(mseq).submit();
 			});
 			} else {
-				swal("살아있네!");
+				swal("취소되었습니다.");
 			}
 		});
 	}

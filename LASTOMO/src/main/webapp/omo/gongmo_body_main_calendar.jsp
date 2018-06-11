@@ -3,50 +3,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!-- 여기에 사이드 우측 바디에 들어갈 컨텐츠를 작성 -->
 
-<script type='text/javascript'>
-   $(document).ready(
-         function() {
-            var scheduleArr = new Array();
-            var now = new Date();
-
-            <c:forEach items="${LVL_CAL}" var="cal">
-	            var sdate = new Date(new Date("${cal.gsday}"))
-	                  .toDateString("yyyy-MM-dd");
-	            var edate = new Date(new Date("${cal.geday}"))
-	                  .toDateString("yyyy-MM-dd");
-	
-	            var gtitle = '${cal.gtitle}'; // + '--'+'${fn:length(cal.gtitle)}';
-	            /*          <c:if test="${fn:length(cal.gtitle) > 16}">
-	             gtitle = "${fn:substring(cal.gtitle, 1, 12)}..."; 
-	             </c:if>  */
-	
-	            var json = {
-	               title : gtitle,
-	               start : sdate,
-	               end : edate,
-	               url : '/gongmo_detail.do?gseq=${cal.gseq}'
-	            };
-	            scheduleArr.push(json);
-	            //console.log(scheduleArr);
-            </c:forEach>
-
-            $('#calendar').fullCalendar({
-               header : {
-                  left : 'prev, today',
-                  center : 'title',
-                  right : 'month, next'
-               },
-               defaultDate : now,
-               editable : false,
-               eventLimit : true, // allow "more" link when too many events
-               events : scheduleArr
-            });
-
-         });
-</script>
-
-
-
 <style type='text/css'>
 th.fc-day-header {
    color: black;
@@ -77,3 +33,45 @@ td.fc-more-cell{
 		</div>
 	</div>
 </div>
+
+<script type='text/javascript'>
+   $(document).ready(function() {
+            var scheduleArr = new Array();
+            var now = new Date();
+
+            <c:forEach items="${LVL_CAL}" var="cal">
+	            var sdate = new Date(new Date("${cal.gsday}"))
+	                  .toDateString("yyyy-MM-dd");
+	            var edate = new Date(new Date("${cal.geday}"))
+	                  .toDateString("yyyy-MM-dd");
+	
+	            var gtitle = "${cal.gtitle}"; // + '--'+'${fn:length(cal.gtitle)}';
+	            /*          <c:if test="${fn:length(cal.gtitle) > 16}">
+	             gtitle = "${fn:substring(cal.gtitle, 1, 12)}..."; 
+	             </c:if>  */
+	
+	            var json = {
+	               title : gtitle,
+	               start : sdate,
+	               end : edate,
+	               url : "/gongmo_detail.do?gseq=${cal.gseq}"
+	            };
+	            scheduleArr.push(json);
+	            //console.log(scheduleArr);
+            </c:forEach>
+
+            $("#calendar").fullCalendar({
+               
+            	header : {
+                  left : "prev, today",
+                  center : "title",
+                  right : "month, next"
+               },
+               defaultDate : now,
+               editable : false,
+               eventLimit : true, // allow "more" link when too many events
+               events : scheduleArr
+            });
+
+         });
+</script>

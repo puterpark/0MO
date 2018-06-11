@@ -36,7 +36,7 @@
          <div>
             <button type="button" class="btn btn-outline btn-primary mb-2" onclick="location.href='/mt_offer_list.do'">내가 쓴 모셔가요</button>
          </div>
-         <table class="table table-hover">
+ <table class="table table-hover">
          	<col style="width: 70%;"></col>
             <col style="width: 15%;"></col>
             <col style="width: 15%;"></col>
@@ -48,6 +48,14 @@
                </tr>
             </thead>
             <tbody>
+            	<c:forEach items="${olist}" var="o">
+               <tr onclick="location.href='/guin_detail.do?oseq=${o.oseq}'" style="cursor:pointer">
+                  <td style="vertical-align: middle;">${o.otitle}</td>
+                  <td style="vertical-align: middle;">${o.lcnt}</td>
+                  <td style="vertical-align: middle;">${o.oregdate}</td>
+                  
+               </tr>
+               </c:forEach>
                
             </tbody>
          </table>
@@ -72,7 +80,7 @@
             </thead>
             <tbody>
             	<c:forEach items="${slist}" var="s">
-               <tr onclick="location.href='/gongmo_detail.do?sseq=${s.sseq}'" style="cursor:pointer">
+               <tr onclick="location.href='/gujik_detail.do?sseq=${s.sseq}'" style="cursor:pointer">
                   <td style="vertical-align: middle;">${s.stitle}</td>
                   <td style="vertical-align: middle;">${s.lcnt}</td>
                   <td style="vertical-align: middle;">${s.sregdate}</td>

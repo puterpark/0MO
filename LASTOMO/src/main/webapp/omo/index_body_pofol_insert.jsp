@@ -3,10 +3,10 @@
 <!DOCTYPE html>
 
 <!-- 여기에 사이드 우측 바디에 들어갈 컨텐츠를 작성 -->
-<div class="col-12 mb-4 mb-lg-0">
+
 
 <style>
-body {margin: 10px}
+/* body {margin: 10px}
 .where {
   display: block;
   margin: 25px 15px;
@@ -15,7 +15,7 @@ body {margin: 10px}
   text-decoration: none;
   font-family: verdana;
   font-style: italic;
-} 
+}  */
 
 .filebox input[type="file"] {
     position: absolute;
@@ -126,15 +126,15 @@ $(document).ready(function(){
 				<!-- onclick="location.href='/index.do'" -->
 			</div>
 		</div>
-<br>
-<br>
+
 		
 		<div class="row">
 			<div class="col">
 				<section class="card card-admin">
 					<div class="card-body">
 						<form class="form-horizontal form-bordered insertform" id="fileUpload" action="/mypofol_insert.do" method="post" enctype="multipart/form-data">
-							<input type="hidden" value="${SESS_MSEQ }" name = "mseq">
+							<div style="visibility: hidden;">히든<br></div>
+							<input type="hidden" value="${SESS_MSEQ}" name = "mseq">
 							<div class="form-group row">
 								<label class="col-lg-3 control-label text-lg-right pt-2">포트폴리오 제목</label>
 								<div class="col-lg-6">
@@ -147,13 +147,14 @@ $(document).ready(function(){
 								<label class="col-lg-3 control-label text-lg-right pt-2">PDF</label>
 								<div class="col-lg-6">
 
-												    pdf파일만 첨부해주세요. <br>
+												    
 												    <div class="filebox bs3-primary">
                             <input class="upload-name" value="파일선택" disabled="disabled">
 
                             <label for="ex_filename">업로드</label> 
-                          <input type="file" id="ex_filename" class="upload-hidden" name="upfile"> 
-                        </div>
+                          <input type="file" id="ex_filename" class="upload-hidden" name="upfile">
+                          <br>* pdf파일만 첨부해주세요. <br> 
+                        <!-- </div> -->
 							 <br> 
 												
 												   <!--  -->
@@ -165,20 +166,8 @@ $(document).ready(function(){
 								
 												       
 
-								</div>
 							</div>
-							
-							<div class="form-group row">
-								<label class="col-lg-3 control-label text-lg-right pt-2">PDF Converter</label>
-								<div class="col-lg-6">
-								</div>
-							</div>
-							
-						</form>
-						 <form action="https://v2.convertapi.com/docx/to/pdf?Secret=RgOH5SdqKt26Dr8i&download=attachment" method="post" enctype="multipart/form-data" >
-												         <input type="file" name="문서첨부"  />
-												            <input type="submit" value="pdf로 변환" class="btn btn-outline btn-light mb-2"/>
-												        </form>
+						</div>
 					</div>
 				</section>
 			</div>
@@ -186,5 +175,4 @@ $(document).ready(function(){
 	</div>
 	<hr class="tall" style="visibility: hidden;">
 </div>
-</div>
-  </body>
+
